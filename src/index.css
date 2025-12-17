@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+dialog {
+  margin: auto;
+}
