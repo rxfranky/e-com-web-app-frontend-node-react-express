@@ -15,8 +15,8 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="lg:flex lg:flex-row flex flex-col p-3 lg:justify-around lg:items-center h-fit lg:h-14 rounded-full bg-yellow-500 font-semibold w-[80vw] m-auto mt-7">
-                <motion.div className="h-fit m-auto" whileTap={{ scale: 1 }} whileHover={{ scale: 1.05 }}>
+            <nav className="lg:flex lg:flex-row lg:justify-around lg:items-center flex flex-col p-3 h-fit lg:h-14 rounded-full bg-yellow-500 font-semibold w-[80vw] m-auto mt-7">
+                <motion.div className="h-fit m-auto lg:m-0" whileTap={{ scale: 1 }} whileHover={{ scale: 1.05 }}>
                     <NavLink to={'/'} className={({ isActive }) => isActive ? 'underline' : ''}><span>Homepage</span></NavLink>
                 </motion.div>
                 <div>
