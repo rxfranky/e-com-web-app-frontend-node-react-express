@@ -33,16 +33,16 @@ export default function Products(): JSX.Element {
     if (data && data.products) {
         content = (
             <>
-                <div className="parent border-2 border-amber-400 h-[80vh] w-[80vw] m-auto mt-5 mb-7 rounded-md">
+                <div className="parent border-2 border-amber-400 w-fit lg:w-[85vw] m-auto mt-5 mb-7 rounded-md">
                     <span className="text-6xl font-semibold tracking-wide mt-7 inline-block ml-7">Products</span>
-                    <div className="products flex gap-4 justify-center mt-10">
+                    <div className="products p-7 lg:flex lg:flex-row flex flex-col md:grid md:grid-cols-2 items-center m-auto gap-4 justify-center">
                         {data.products.length === 0 && <p className="text-4xl text-center tracking-wide">Store is Empty</p>}
                         {data.products.map((product: any) => (
                             <Product key={product.id} id={product.id} price={product.price} imageSrc={product.image_src} title={product.title} btnTitle_1='Add to Cart' btnTitle_2="Buy Now" />
                         ))}
                     </div>
                     {data.products.length !== 0 && (
-                        <div className="pagination  mt-6">
+                        <div className="pagination  mb-5">
                             <div className="m-auto w-fit">
                                 <Button
                                     disabled={searchParams.get('page') === '1'}

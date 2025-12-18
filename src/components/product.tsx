@@ -129,12 +129,12 @@ export default function Product({ imageSrc, title, price, btnTitle_1, btnTitle_2
 
     return (
         <>
-            <div className="product  border-2 border-amber-400 w-[310px] h-[460px] rounded-md flex flex-col justify-center items-center gap-3">
+            <div className="product  border-2 border-amber-400 w-[250px] h-[400px] rounded-md flex flex-col justify-center items-center gap-3">
 
                 <div
                     onMouseLeave={() => setShowPrice(false)}
                     onMouseEnter={() => setShowPrice(true)}
-                    className={`image  w-[260px] h-80 ${showPrice ? 'flex items-center justify-center' : ''} relative`}
+                    className={`image  w-[200px] h-[260px] ${showPrice ? 'flex items-center justify-center' : ''} relative`}
                 >
                     <span onClick={toggleContentOfHeartSvg} className="heart-svg">
                         {heartSvgContent}
@@ -156,7 +156,8 @@ export default function Product({ imageSrc, title, price, btnTitle_1, btnTitle_2
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={transitionVal}
                                     exit={{ opacity: opacityVal, y: yVal }}
-                                    className="object-cover w-full h-full" src={imageSrc}
+                                    className="object-cover w-full h-full"
+                                    src={imageSrc}
                                     alt={`image of ${title}`}
                                 />
                             )

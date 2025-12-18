@@ -15,12 +15,12 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="flex justify-around items-center h-14 rounded-full bg-yellow-500 font-semibold w-[80vw] m-auto mt-7">
-                <motion.div whileTap={{ scale: 1 }} whileHover={{ scale: 1.05 }}>
+            <nav className="lg:flex lg:flex-row flex flex-col p-3 lg:justify-around lg:items-center h-fit lg:h-14 rounded-full bg-yellow-500 font-semibold w-[80vw] m-auto mt-7">
+                <motion.div className="h-fit m-auto" whileTap={{ scale: 1 }} whileHover={{ scale: 1.05 }}>
                     <NavLink to={'/'} className={({ isActive }) => isActive ? 'underline' : ''}><span>Homepage</span></NavLink>
                 </motion.div>
                 <div>
-                    <ul className="flex justify-center items-center gap-3">
+                    <ul className="flex flex-wrap justify-center items-center lg:gap-3 gap-2">
                         <NavLink to={'products?page=1'} className={({ isActive }) => isActive ? 'underline' : ''}><motion.li whileTap={{ scale: 1 }} whileHover={{ scale: 1.05 }}>Products</motion.li></NavLink>
                         {isLoggedIn && (
                             <>

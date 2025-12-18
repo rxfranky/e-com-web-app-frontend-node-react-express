@@ -42,11 +42,11 @@ export default function Orders(): JSX.Element {
                         <div key={orderItem.order_id} className="order-item w-[80vw] justify-between mb-3 flex border-2 border-amber-400 p-1 rounded-md">
                             <div className="flex gap-3 ml-11">
                                 <span className="font-semibold">Order id-</span>
-                                <span className="font-semibold">{orderItem.order_id}</span>
+                                <span className="font-semibold lg:w-[571px] md:w-[250px] w-[120px] overflow-clip">{orderItem.order_id}</span>
                             </div>
                             <NavLink to={`https://e-com-practice-backend.onrender.com/consumer/downloadInvoice/${orderItem.order_id}`}>
                                 <motion.span
-                                    className="font-semibold inline-block mr-4"
+                                    className="font-semibold inline-block mr-3 ml-3"
                                     variants={{ ini: { scale: 1 }, ani: { scale: 1.05 } }}
                                     initial='ini'
                                     whileHover='ani'
