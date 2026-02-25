@@ -1,7 +1,5 @@
 import type { JSX } from "react"
 import CartItem from "../components/cart-item"
-import captain_america from '../assets/captain-america.jpeg'
-import iron_man from '../assets/iron-man.jpeg'
 
 export default function OrderDetail(): JSX.Element {
     return (
@@ -18,8 +16,8 @@ export default function OrderDetail(): JSX.Element {
                     <span className="font-semibold inline-block mr-4">Price</span>
                 </div>
                 <div className="items w-[80vw]">
-                    <CartItem isForOrderDetailPage={true} imgSrc={captain_america} price="199" title="Captain America" />
-                    <CartItem isForOrderDetailPage={true} imgSrc={iron_man} price="399" title="Iron Man" />
+                    <CartItem isForOrderDetailPage={true} imgSrc={''} price="199" title="Captain America" />
+                    <CartItem isForOrderDetailPage={true} imgSrc={''} price="399" title="Iron Man" />
                 </div>
                 <div className="checkout flex justify-end">
                     <div>

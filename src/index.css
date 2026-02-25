@@ -7,3 +7,7 @@
 dialog {
   margin: auto;
 }
+
+@theme {
+  --color-bStoreCol: rgb(14, 52, 90);
+}

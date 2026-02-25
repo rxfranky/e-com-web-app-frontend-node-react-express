@@ -1,7 +1,6 @@
-import type { JSX } from "react";
-import Button from "./button";
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from 'motion/react'
+import type { JSX } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { addToCart, checkout, deleteProduct } from "../util/http-requests";
 import Error from "../pages/error";
@@ -11,14 +10,16 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 import { useEffect } from "react";
 
-
 interface Props {
     imageSrc: string;
     title: string;
     price: number;
     btnTitle_1: string;
-    btnTitle_2: string;
-    id?: number,
+    btnTitle_2?: string;
+    id: number;
+    forProductsPage?: boolean;
+    initial?: { x?: number; y?: number };
+    animate?: { x?: number; y?: number }
 }
 
 interface mutationRes {
@@ -29,13 +30,11 @@ interface mutationRes {
     data?: any
 }
 
-export default function Product({ imageSrc, title, price, btnTitle_1, btnTitle_2, id }: Props): JSX.Element {
+export default function Product({ forProductsPage, imageSrc, title, price, btnTitle_1, btnTitle_2, id, initial = { y: -30 }, animate = { y: 0 } }: Props): JSX.Element {
     const [showDialog, setShowDialog] = useState<boolean>(false)
-    const [showPrice, setShowPrice] = useState<boolean>(false)
-    const [isWishlisted, setIsWishlisted] = useState<boolean>(false)
     const { pathname } = useLocation()
-
     const navigate = useNavigate()
+    const [showbtn, setShowBtn] = useState(false)
 
     const { mutate, data, error, isError, isPending }: mutationRes = useMutation(
         {
@@ -102,76 +101,70 @@ export default function Product({ imageSrc, title, price, btnTitle_1, btnTitle_2
         dMutate(id)
     }
 
-    let heartSvgContent = (
-        <svg className={`cursor-pointer absolute right-0 ${showPrice ? 'top-0' : ''}`} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="25px" height="25px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" id="Stock_cut" version="1.1" xmlSpace="preserve"><desc /><path d="M28.343,17.48L16,29  L3.657,17.48C1.962,15.898,1,13.684,1,11.365v0C1,6.745,4.745,3,9.365,3h0.17c2.219,0,4.346,0.881,5.915,2.45L16,6l0.55-0.55  C18.119,3.881,20.246,3,22.465,3h0.17C27.255,3,31,6.745,31,11.365v0C31,13.684,30.038,15.898,28.343,17.48z" fill="none" stroke="#000000" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" /></svg>
-    )
-    if (isWishlisted) {
-        heartSvgContent = (
-            <svg className={`cursor-pointer absolute right-0 ${showPrice ? 'top-0' : ''}`} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000" version="1.1" id="Capa_1" width="25px" height="25px" viewBox="0 0 544.582 544.582" xmlSpace="preserve">
-                <g>
-                    <path d="M448.069,57.839c-72.675-23.562-150.781,15.759-175.721,87.898C247.41,73.522,169.303,34.277,96.628,57.839   C23.111,81.784-16.975,160.885,6.894,234.708c22.95,70.38,235.773,258.876,263.006,258.876   c27.234,0,244.801-188.267,267.751-258.876C561.595,160.732,521.509,81.631,448.069,57.839z" />
-                </g>
-            </svg>
-        )
-    }
-    function toggleContentOfHeartSvg() {
-        setIsWishlisted((val) => !val)
-    }
-
-    let transitionVal = {};
-    let yVal = -50
-    let opacityVal = 0
-    if (title.toLowerCase().trim().includes('iron man') || title.toLowerCase().trim().includes('captain america')) {
-        transitionVal = { stiffness: 0, duration: 2 }
-        opacityVal = 1
-        yVal = -160
+    function handleShowDatailBtn() {
+        setShowBtn((val) => !val)
     }
 
     return (
         <>
-            <div className="product  border-2 border-amber-400 w-[250px] h-[400px] rounded-md flex flex-col justify-center items-center gap-3">
-
-                <div
-                    onMouseLeave={() => setShowPrice(false)}
-                    onMouseEnter={() => setShowPrice(true)}
-                    className={`image  w-[200px] h-[260px] ${showPrice ? 'flex items-center justify-center' : ''} relative`}
+            <AnimatePresence>
+                <motion.div
+                    id="product"
+                    onMouseEnter={handleShowDatailBtn}
+                    onMouseLeave={handleShowDatailBtn}
+                    className={`w-42 h-73 ${forProductsPage && "w-65 h-94"} max-sm:w-69 max-sm:h-110`}
+                    initial={{ ...initial, opacity: 0 }}
+                    animate={{ ...animate, opacity: 1 }}
+                    exit={{ ...initial, opacity: 0 }}
+                    transition={{ duration: 0.5 }}
                 >
-                    <span onClick={toggleContentOfHeartSvg} className="heart-svg">
-                        {heartSvgContent}
-                    </span>
+                    <div className={`h-44 ${forProductsPage && "h-65"} bg-gray-100 flex items-center justify-center relative max-sm:h-71`}>
+                        <motion.img
+                            src={imageSrc}
+                            alt={`image of ${title}`}
+                            className={`h-36 object-cover w-28 ${forProductsPage && "h-55 w-45"} max-sm:w-55 max-sm:h-63`}
+                        />
+
+                        <AnimatePresence>
+                            {showbtn && <motion.span
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: 20, opacity: 0 }}
+                                className="absolute w-full py-3 text-center bottom-0 bg-white/80 text-black"
+                            >Quick View</motion.span>}
+                        </AnimatePresence>
+                    </div>
+
+                    <div className="flex flex-col items-center max-sm:gap-2 my-3 max-sm:my-5 max-sm:text-xl text-white">
+                        <span className={`${forProductsPage && "text-[#414141]"} text-center w-[120px] overflow-hidden text-nowrap`}>{title}</span>
+                        <span className={`${forProductsPage && "text-[#999997]"} text-center w-20 overflow-clip text-nowrap`}>${price}</span>
+                    </div>
                     <AnimatePresence>
-                        {
-                            showPrice ? (
-                                <motion.span
-                                    initial={{ opacity: 0, y: 50 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 50 }}
-                                    className="font-semibold text-xl tracking-wide"
+                        {(showbtn || window.outerWidth <= 640) && <motion.div
+                            className="flex justify-between"
+                            exit={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            initial={{ opacity: 0 }}
+                        >
+                            <button
+                                className={`bg-bStoreCol py-2 max-sm:py-4 ${!forProductsPage ? "border-2 border-white w-full" : "w-[102px]"} text-white cursor-pointer`}
+                                onClick={btnTitle_1?.trim().toLowerCase() === 'edit' ? handleEdit : handleAddToCart}
+                            >
+                                {isPending ? 'Adding...' : btnTitle_1}
+                            </button>
+                            {forProductsPage &&
+                                <button
+                                    className={`bg-bStoreCol cursor-pointer w-[102px] py-2 max-sm:py-4 ${!forProductsPage && "border-2 border-white"} text-white`}
+                                    onClick={btnTitle_2?.trim().toLowerCase() === 'delete' ? handleDelete : handleBuy}
                                 >
-                                    {price}$
-                                </motion.span>
-                            ) : (
-                                <motion.img
-                                    initial={{ opacity: opacityVal, y: yVal }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={transitionVal}
-                                    exit={{ opacity: opacityVal, y: yVal }}
-                                    className="object-cover w-full h-full"
-                                    src={imageSrc}
-                                    alt={`image of ${title}`}
-                                />
-                            )
+                                    {bIsPending ? 'Checking...' : dIspending ? 'Deleting...' : btnTitle_2}
+                                </button>
+                            }
+                        </motion.div>
                         }
                     </AnimatePresence>
-                </div>
-
-                <span className="title w-[200px] text-center overflow-clip text-nowrap  font-semibold">{title}</span>
-
-                <div className="action  flex gap-7">
-                    <Button onClick={btnTitle_1.trim().toLowerCase() === 'edit' ? handleEdit : handleAddToCart} className="p-1 h-fit cursor-pointer rounded-sm border-2 border-amber-400 bg-amber-100">{isPending ? 'adding...' : btnTitle_1}</Button>
-                    <Button onClick={btnTitle_2.trim().toLowerCase() === 'delete' ? handleDelete : handleBuy} className="p-1 h-fit cursor-pointer rounded-sm border-2 border-amber-400 bg-amber-100">{bIsPending ? 'checking...' : dIspending ? 'deleting...' : btnTitle_2}</Button>
-                </div>
-            </div>
+                </motion.div>
+            </AnimatePresence>
             {showDialog && (
                 createPortal(
                     <Modal showDialog={showDialog}>{data ? data.msg : dData.msg}</Modal>,

@@ -1,5 +1,4 @@
 import type { JSX } from "react"
-import Button from "../components/button"
 import FormComponent from "../components/form-component"
 import { useMutation } from "@tanstack/react-query"
 import { useState, useEffect } from "react"
@@ -10,6 +9,7 @@ import { useActionState } from "react"
 import { createPortal } from "react-dom"
 import { newPassword } from "../util/http-requests"
 import { useSearchParams } from "react-router"
+
 
 interface resMutation {
     mutate: any;
@@ -61,14 +61,14 @@ export default function NewPassword(): JSX.Element {
     return (
         <>
 
-            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-amber-100 rounded-md flex justify-center">
+            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="New Password" name="newPassword" />
                     <FormComponent label="Password" name="newConfirmPassword" />
                     <div className="flex justify-end gap-3 items-center">
-                        <Button className="p-1 h-fit cursor-pointer rounded-sm border-2 border-amber-400 bg-amber-100">
+                        <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">
                             {isPending ? ' Password Reseting...' : isFormSubmitting ? 'Submitting...' : 'Reset'}
-                        </Button>
+                        </button>
                     </div>
                 </form>
             </div>

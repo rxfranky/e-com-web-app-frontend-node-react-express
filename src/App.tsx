@@ -7,9 +7,7 @@ import AddProduct from './pages/add-product'
 import Signup from './pages/signup'
 import Login from './pages/login'
 import Orders from './pages/orders'
-import Cart from './pages/cart'
 import OrderDetail from './pages/order-detail'
-import OrdersRootComponent from './components/orders-root-component'
 import ChangePassword from './pages/change-password'
 import ResetPassword from './pages/reset-password'
 import AdminProducts from './pages/admin-products'
@@ -71,11 +69,6 @@ export const router = createBrowserRouter([
             element: <NewPassword />
           }
         ]
-      },
-      {
-        path: 'cart',
-        errorElement: <Error />,
-        element: <Cart />
       },
       {
         path: 'orders',

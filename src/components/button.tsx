@@ -1,7 +1,7 @@
 import { motion } from "motion/react"
 
 export default function Button(
-    { children, onClick, disabled, className }: { children: string; onClick?: any; disabled?: boolean; className: string }
+    { children, onClick, disabled, className }: { children: string; onClick?: () => any; disabled?: boolean; className: string }
 ) {
     return (
         <>
@@ -18,5 +18,3 @@ export default function Button(
         </>
     )
 }
-
-//"p-1 h-fit cursor-pointer rounded-sm border-2 border-amber-400 bg-amber-100"

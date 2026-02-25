@@ -1,5 +1,5 @@
 import { NavLink } from "react-router"
-import { motion, scale } from 'motion/react'
+import { motion } from 'motion/react'
 import { useSelector, useDispatch } from "react-redux"
 import { logout as logoutAction } from "../store/auth/auth-slice"
 

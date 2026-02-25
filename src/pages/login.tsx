@@ -1,5 +1,4 @@
 import type { JSX } from "react"
-import Button from "../components/button"
 import FormComponent from "../components/form-component"
 import { NavLink } from "react-router"
 import { useMutation } from "@tanstack/react-query"
@@ -10,8 +9,9 @@ import Error from "./error"
 import Modal from "../components/modal"
 import { useActionState } from "react"
 import { createPortal } from "react-dom"
-import { useDispatch } from 'react-redux'
 import { login as loginAction } from "../store/auth/auth-slice"
+import { useSelector, useDispatch } from 'react-redux'
+import { handleShowHamberger as  handleShowHambergerAction} from '../store/show/show-slice'
 
 
 interface resMutation {
@@ -27,7 +27,14 @@ export default function Login(): JSX.Element {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const [formState, formAction, isFormSubmitting] = useActionState(handleFormSubmit, null)
+    const show = useSelector((state: any) => state.showStateChanger)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (show.showHamberger) {
+            dispatch(handleShowHambergerAction(false))
+        }
+    }, [])
 
     const { mutate, isError, error, isPending, data }: resMutation = useMutation(
         {
@@ -53,7 +60,8 @@ export default function Login(): JSX.Element {
         if (data && data.authToken) {
             localStorage.setItem('authToken', data.authToken)
             localStorage.setItem('email', data.email)
-            dispatch(loginAction(data.email))
+            localStorage.setItem('name', data.name)
+            dispatch(loginAction(data))
         }
     }, [data])
 
@@ -71,22 +79,28 @@ export default function Login(): JSX.Element {
         <>
             {content ?? (
                 <>
-                    <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-amber-100 rounded-md flex justify-center">
+                    <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
                         <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                             <FormComponent label="Email" name="email" />
                             <FormComponent label="Password" name="password" />
                             <div className="flex justify-end gap-3 items-center">
-                                <NavLink to={'resetPassword'}><span className="cursor-pointer">Reset Password</span></NavLink>
-                                <Button className="p-1 h-fit cursor-pointer rounded-sm border-2 border-amber-400 bg-amber-100">
+                                <NavLink to={'resetPassword'}>
+                                    <span className="cursor-pointer text-white">Reset Password</span>
+                                </NavLink>
+                                <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">
                                     {isPending ? 'Logging in...' : isFormSubmitting ? 'Submitting...' : 'Login'}
-                                </Button>
+                                </button>
                             </div>
                         </form>
                     </div>
                     {showDialog && (
-                        createPortal(<Modal showDialog={showDialog}>{data.msg} redirecting...</Modal>,
-                            document.querySelector('#modal')!))
-                    }
+                        createPortal(
+                            <Modal showDialog={showDialog}>
+                                {data.msg} redirecting...
+                            </Modal>,
+                            document.querySelector('#modal')!
+                        )
+                    )}
                     {((data && !data.authToken && !data.invalidInputs)) && (
                         <ul className="m-auto w-[60vw]"><li className="bg-red-300 p-2 rounded-md mb-2">{data.msg}</li></ul>
                     )}

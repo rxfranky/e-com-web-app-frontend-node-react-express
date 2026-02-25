@@ -111,10 +111,10 @@ export async function addProduct(data: any) {
     return resData;
 }
 
-export async function fetchProducts(signal: any, queryParam: string, isAdmin?: boolean) {
+export async function fetchProducts(signal: any, queryParam?: string, isAdmin?: boolean) {
     const authToken: string | null = localStorage.getItem('authToken');
 
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/products?page=${queryParam}&isAdmin=${isAdmin ?? false}`, {
+    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/products?page=${queryParam??null}&isAdmin=${isAdmin ?? false}`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken

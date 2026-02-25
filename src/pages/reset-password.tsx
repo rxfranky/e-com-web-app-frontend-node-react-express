@@ -1,10 +1,7 @@
-import Button from "../components/button";
 import FormComponent from "../components/form-component";
 import { useActionState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "./error";
-import { createPortal } from "react-dom";
-import Modal from "../components/modal";
 import { resetPassword } from "../util/http-requests";
 
 
@@ -35,11 +32,11 @@ export default function ResetPassword() {
 
     return (
         <>
-            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-amber-100 rounded-md flex justify-center">
+            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="Email" name="email" />
                     <div className="flex justify-end gap-3 items-center">
-                        <Button className="p-1 h-fit cursor-pointer rounded-sm border-2 border-amber-400 bg-amber-100">{isFormSubmitting ? 'submitting form...' : isPending ? 'sending reset email...' : 'Reset Password'}</Button>
+                        <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">{isFormSubmitting ? 'submitting form...' : isPending ? 'sending reset email...' : 'Reset Password'}</button>
                     </div>
                 </form>
             </div>
