@@ -70,7 +70,7 @@ export default function Signup(): JSX.Element {
                     <FormComponent label="Password" name="password" />
                     <FormComponent label="Confirm Password" name="confirmPassword" />
                     <div className="flex justify-end">
-                        <button className="py-1.5 px-4 w-[100px] text-nowrap overflow-clip h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? "Signing up..." : 'Signup'}</button>
+                        <button className="py-1.5 px-2 w-[106px] text-nowrap overflow-clip h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? "Signing up..." : 'Signup'}</button>
                     </div>
                 </form>
             </div>

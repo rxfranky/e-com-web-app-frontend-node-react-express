@@ -63,13 +63,13 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
             <AnimatePresence>
                 <motion.div
                     id="cart"
-                    className="w-100 h-[90vh] bg-white absolute right-0 rounded-l-xl"
+                    className="w-96 h-[90vh] bg-white absolute right-0 rounded-l-xl"
                     initial={{ x: 50 }}
                     animate={{ x: 0 }}
                 >
                     <div className="flex justify-center my-5">
-                        <div id="top" className="mr-4">
-                            <div id="txt" className="flex justify-between items-center w-[357.5px]">
+                        <div id="top">
+                            <div id="txt" className="flex justify-between items-center w-[345.5px]">
                                 <div>
                                     <span className="font-semibold text-xl mr-1">Cart</span>
                                     <span>{totalQuan}</span>
@@ -78,12 +78,12 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
                                     <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" className="sOnyBDt"><path fill-rule="evenodd" d="M19.2928932,3.99989322 L20,4.707 L12.7068932,11.9998932 L20,19.2928932 L19.2928932,20 L11.9998932,12.7068932 L4.707,20 L3.99989322,19.2928932 L11.2928932,11.9998932 L3.99989322,4.707 L4.707,3.99989322 L11.9998932,11.2928932 L19.2928932,3.99989322 Z"></path></svg>
                                 </span>
                             </div>
-                            <div id="partition" className="w-[357.5px] h-[0.5px] bg-black mt-4">
+                            <div id="partition" className="w-[345.5px] h-[0.5px] bg-black mt-4">
                             </div>
                         </div>
                     </div>
 
-                    <section id="cartItems" className="overflow-y-scroll h-[60vh] flex flex-col items-center gap-4">
+                    <section id="cartItems" className="overflow-y-scroll ml-3 h-[55vh] flex flex-col items-center gap-4">
                         {isPending && (
                             <p className="text-xl text-center mt-12 tracking-wide">Loading...</p>
                         )}
@@ -100,7 +100,7 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
                         }
                     </section>
                     <section id="bottom" className="flex justify-center">
-                        <div className="w-[357.5px]">
+                        <div className="w-[345.5px]">
                             <div className="flex flex-col gap-3">
                                 <div id="partition" className="h-[0.5px] bg-black mt-4">
                                 </div>
