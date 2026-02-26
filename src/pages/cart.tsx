@@ -83,7 +83,7 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
                         </div>
                     </div>
 
-                    <section id="cartItems" className="overflow-y-scroll ml-3 h-[55vh] flex flex-col items-center gap-4">
+                    <section id="cartItems" className="overflow-y-scroll ml-3 h-[52vh] flex flex-col items-center gap-4">
                         {isPending && (
                             <p className="text-xl text-center mt-12 tracking-wide">Loading...</p>
                         )}
