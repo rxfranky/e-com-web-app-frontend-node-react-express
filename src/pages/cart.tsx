@@ -63,7 +63,7 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
             <AnimatePresence>
                 <motion.div
                     id="cart"
-                    className="w-105 h-screen bg-white absolute right-0 rounded-l-xl"
+                    className="w-100 h-[90vh] bg-white absolute right-0 rounded-l-xl"
                     initial={{ x: 50 }}
                     animate={{ x: 0 }}
                 >

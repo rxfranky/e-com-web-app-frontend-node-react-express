@@ -14,7 +14,7 @@ export default memo(function Modal({ children, showDialog }: { children: ReactNo
     return (
         <>
             <dialog ref={dialogRef}>
-                <div className="w-[50vw] h-[50vh] rounded-md border border-bStoreCol flex items-center justify-center">
+                <div className="w-[50vw] max-sm:w-[70vw] h-[50vh] max-sm:h-[32vh] rounded-md border border-bStoreCol flex items-center justify-center">
                     <p className="font-semibold text-xl text-center text-bStoreCol">{children}</p>
                 </div>
             </dialog>

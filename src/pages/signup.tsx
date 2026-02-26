@@ -61,20 +61,16 @@ export default function Signup(): JSX.Element {
         )
     }
 
-    if (isPending) {
-        return <p className="text-4xl text-center mt-12 tracking-wide">Signing up...</p>
-    }
-
     return (
         <>
-            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
+            <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="Name" name="name" />
                     <FormComponent label="Email" name="email" />
                     <FormComponent label="Password" name="password" />
                     <FormComponent label="Confirm Password" name="confirmPassword" />
                     <div className="flex justify-end">
-                        <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">Signup</button>
+                        <button className="py-1.5 px-4 w-[100px] text-nowrap overflow-clip h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? "Signing up..." : 'Signup'}</button>
                     </div>
                 </form>
             </div>

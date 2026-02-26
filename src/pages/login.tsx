@@ -11,7 +11,7 @@ import { useActionState } from "react"
 import { createPortal } from "react-dom"
 import { login as loginAction } from "../store/auth/auth-slice"
 import { useSelector, useDispatch } from 'react-redux'
-import { handleShowHamberger as  handleShowHambergerAction} from '../store/show/show-slice'
+import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
 
 
 interface resMutation {
@@ -79,7 +79,7 @@ export default function Login(): JSX.Element {
         <>
             {content ?? (
                 <>
-                    <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
+                    <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                         <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                             <FormComponent label="Email" name="email" />
                             <FormComponent label="Password" name="password" />
@@ -87,7 +87,7 @@ export default function Login(): JSX.Element {
                                 <NavLink to={'resetPassword'}>
                                     <span className="cursor-pointer text-white">Reset Password</span>
                                 </NavLink>
-                                <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">
+                                <button className="py-1.5 w-[85px] text-nowrap  overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">
                                     {isPending ? 'Logging in...' : isFormSubmitting ? 'Submitting...' : 'Login'}
                                 </button>
                             </div>

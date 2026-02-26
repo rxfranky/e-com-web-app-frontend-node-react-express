@@ -74,13 +74,13 @@ export default function ChangePassword() {
 
     return (
         <>
-            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
+            <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="Old Password" name="oldPassword" />
                     <FormComponent label="New Password" name="newPassword" />
                     <FormComponent label="New Confirm Password" name="newConfirmPassword" />
-                    <div className="flex justify-end gap-3 items-center">
-                        <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? 'Changing password...' : isFormSubmitting ? 'Submitting...' : 'Change Password'}</button>
+                    <div className="flex justify-end">
+                        <button className="py-1.5 w-[140px] text-nowrap overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? 'Changing password...' : isFormSubmitting ? 'Submitting...' : 'Change Password'}</button>
                     </div>
                 </form>
             </div>

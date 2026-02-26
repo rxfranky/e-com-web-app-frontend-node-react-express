@@ -13,14 +13,14 @@ export default function Homepage() {
                         <span className="leading-none">BOOK,</span>
                         <span className="leading-none">AND YOU.</span>
                     </div>
-                    <img src={"https://res.cloudinary.com/dtgh4iqul/image/upload/v1772035166/bg-image_jayfki.avif"} alt="" className="object-cover h-full w-full" />
+                    <img src={"https://res.cloudinary.com/dtgh4iqul/image/upload/v1772035166/bg-image_jayfki.avif"} alt="background image" className="object-cover h-full w-full" />
                 </main>
             </section>
 
             <section id="main" className="mt-16 max-sm:mt-6">
-                <div className="txt text-center mb-36 max-sm:mb-4">
-                    <span className="text-2xl text-bStoreCol font-semibold">BINK. Publishers</span><br />
-                    <span className="text-5xl text-bStoreCol tracking-widest font-bold">BESTSELLERS </span>
+                <div id="txt" className="text-center mb-36 max-sm:mb-4">
+                    <span className="text-2xl max-sm:text-xl text-bStoreCol font-semibold">BINK. Publishers</span><br />
+                    <span className="text-5xl max-sm:text-3xl text-bStoreCol tracking-widest font-bold">BESTSELLERS </span>
                 </div>
                 <div className="flex justify-center relative">
                     <BookSection atTop={true} />

@@ -36,7 +36,7 @@ export default function Header() {
                         </div>
                     </NavLink>
                     {window.outerWidth >= 640 ? (
-                        <ul className="flex gap-5 items-center">
+                        <ul className="flex gap-5 items-center max-md:gap-2">
                             <NavLink to={'products?page=1'} className={({ isActive }) => isActive ? 'underline decoration-bStoreCol' : ''}><motion.li className="text-bStoreCol text-lg" whileTap={{ scale: 1 }} whileHover={{ scale: 1.05 }}>Products</motion.li></NavLink>
                             <li className="text-bStoreCol text-lg">Events</li>
                             <li className="text-bStoreCol text-lg">About</li>

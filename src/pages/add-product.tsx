@@ -79,7 +79,7 @@ export default function AddProduct(): JSX.Element {
 
     return (
         <>
-            <div className="m-auto mt-5 mb-5 parent w-[60vw] bg-bStoreCol rounded-md flex justify-center">
+            <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent value={title!} label="Title" name="title" />
                     <FormComponent label="Description" name="description" />
@@ -89,7 +89,7 @@ export default function AddProduct(): JSX.Element {
                         <input className="p-1 pl-3 w-[50vw] bg-white" type="file" name="image" id="image" />
                     </div>
                     <div className="flex justify-end">
-                        <button className="py-1.5 px-4 h-fit cursor-pointer bg-white text-bStoreCol">{isFormSubmitting ? 'submitting...' : isPending ? 'Adding product...' : 'Add Product'}</button>
+                        <button className="py-1.5 w-[105px] text-nowrap overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">{isFormSubmitting ? 'submitting...' : isPending ? 'Adding product...' : 'Add Product'}</button>
                     </div>
                 </form>
             </div>
