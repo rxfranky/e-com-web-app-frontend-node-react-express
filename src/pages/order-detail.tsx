@@ -16,8 +16,8 @@ export default function OrderDetail(): JSX.Element {
                     <span className="font-semibold inline-block mr-4">Price</span>
                 </div>
                 <div className="items w-[80vw]">
-                    <CartItem isForOrderDetailPage={true} imgSrc={''} price="199" title="Captain America" />
-                    <CartItem isForOrderDetailPage={true} imgSrc={''} price="399" title="Iron Man" />
+                    <CartItem isForOrderDetailPage={true} imgSrc={''} price={199} title="Captain America" />
+                    <CartItem isForOrderDetailPage={true} imgSrc={''} price={399} title="Iron Man" />
                 </div>
                 <div className="checkout flex justify-end">
                     <div>
