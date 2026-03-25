@@ -6,7 +6,7 @@ import { fetchCart } from "../util/http-requests"
 import Error from "./error"
 import { useMutation } from "@tanstack/react-query"
 import { checkout } from "../util/http-requests"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 
 
 type queRes = {
@@ -48,8 +48,18 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
     let totalPrice = 0;
     let totalQuan = 0;
     if (data && data.cart) {
-        data.cart.forEach((element: any) => {
-            totalPrice = totalPrice + ((+element.price) * element.quantity)
+        data.cart.forEach((element: {
+            id: number;
+            quantity: number;
+            consumer: number;
+            products: {
+                id: number;
+                title: string;
+                price: number;
+                image_src: string;
+            };
+        }) => {
+            totalPrice = totalPrice + ((+element.products.price) * element.quantity)
             totalQuan += element.quantity
         });
     }
@@ -91,8 +101,18 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
                             <p className="text-xl text-center mt-12 tracking-wide">{data.msg}</p>
                         )}
                         {(data && data.cart) && (
-                            data.cart.map((cartItem: any) => (
-                                <CartItem key={cartItem.id} id={cartItem.id} quantity={cartItem.quantity} imgSrc={cartItem.image_src} price={cartItem.price} title={cartItem.title} />
+                            data.cart.map((cartItem: {
+                                id: number;
+                                quantity: number;
+                                consumer: number;
+                                products: {
+                                    id: number;
+                                    title: string;
+                                    price: number;
+                                    image_src: string;
+                                };
+                            }) => (
+                                <CartItem key={cartItem.id} id={cartItem.id} quantity={cartItem.quantity} imgSrc={cartItem.products.image_src} price={cartItem.products.price} title={cartItem.products.title} />
                             ))
                         )}
                         {(isError || mIsError) && (

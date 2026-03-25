@@ -7,7 +7,7 @@ import { queryClient } from "../main";
 
 interface Props {
     title: string;
-    price: string;
+    price: number;
     imgSrc: string,
     isForOrderDetailPage?: boolean;
     quantity?: number,
