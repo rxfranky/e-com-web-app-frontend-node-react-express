@@ -1,3 +1,11 @@
+import { authClient } from "./auth-client"
+
+async function getoAuthToken() {
+    const { data } = await authClient.getSession()
+    return data?.session.token
+}
+
+
 export async function signup(userData: any) {
     const response = await fetch('https://e-com-practice-backend.onrender.com/auth/signup', {
         method: 'POST',
@@ -19,11 +27,12 @@ export async function signup(userData: any) {
 export async function login(loginData: any) {
     const authToken: string | null = localStorage.getItem('authToken')
     const response = await fetch('https://e-com-practice-backend.onrender.com/auth/login', {
-        body: JSON.stringify(loginData),
+        body: JSON.stringify({ email: loginData.email, password: loginData.password }),
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const data = await response.json()
@@ -44,7 +53,7 @@ export async function changePassword(data: any) {
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json',
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
         }
     })
     const resData = await response.json()
@@ -99,7 +108,8 @@ export async function addProduct(data: any) {
         method: 'POST',
         body: data.formData,
         headers: {
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const resData = await response.json()
@@ -114,10 +124,11 @@ export async function addProduct(data: any) {
 export async function fetchProducts(signal: any, queryParam?: string, isAdmin?: boolean) {
     const authToken: string | null = localStorage.getItem('authToken');
 
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/products?page=${queryParam??null}&isAdmin=${isAdmin ?? false}`, {
+    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/products?page=${queryParam ?? null}&isAdmin=${isAdmin ?? false}`, {
         signal,
         headers: {
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const resData = await response.json()
@@ -134,7 +145,8 @@ export async function addToCart(id: number) {
 
     const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/addToCart/${id}`, {
         headers: {
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const resData = await response.json()
@@ -152,7 +164,8 @@ export async function fetchCart({ signal }: { signal: any }) {
     const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/fetchCart', {
         signal,
         headers: {
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const data = await response.json()
@@ -179,12 +192,13 @@ export async function quantityControl({ id, action }: { id: number; action: stri
 export async function checkout(data: any) {
     const authToken: string | null = localStorage.getItem('authToken')
     const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/checkout', {
-        headers: {
-            authToken: 'Bearer ' + authToken,
-            "Content-Type": 'application/json'
-        },
+        method: 'POST',
         body: JSON.stringify(data),
-        method: 'POST'
+        headers: {
+            "Content-Type": 'application/json',
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
+        }
     })
     const resData = await response.json()
     if (!response.ok) {
@@ -201,7 +215,8 @@ export async function fetchOrders({ signal }: { signal: any }) {
     const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/fetchOrders', {
         signal,
         headers: {
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const data = await response.json()
@@ -218,12 +233,70 @@ export async function deleteProduct(id: number) {
     const response = await fetch(`https://e-com-practice-backend.onrender.com/admin/deleteProduct/${id}`, {
         method: 'DELETE',
         headers: {
-            authToken: 'Bearer ' + authToken
+            authToken: 'Bearer ' + authToken,
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     })
     const data = await response.json()
     if (!response.ok) {
         const err = new Error(data.msg || 'res is not ok for delete product') as Error & { statusCode: number }
+        err.statusCode = response.status
+        throw err;
+    }
+    return data;
+}
+
+export async function subscribe(email: string) {
+    const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/subscribe', {
+        body: JSON.stringify({ email }),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    const data = await response.json()
+
+    if (!response.ok) {
+        const err = new Error(data.msg || 'res is not ok for subscribe') as Error & {
+            statusCode: number
+        }
+        err.statusCode = response.status
+        throw err;
+    }
+    return data;
+}
+
+export async function getAuthState(): Promise<{ userData: { name: string; email: string } }> {
+    const authToken = localStorage.getItem('authToken');
+    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/getAuthState', {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer ' + authToken
+        }
+    })
+    const data = await response.json();
+
+    if (!response.ok) {
+        const err = new Error(data.msg || 'res is not ok for getAuthState') as Error & {
+            statusCode: number
+        }
+        err.statusCode = response.status
+        throw err;
+    }
+    return data;
+}
+
+export async function logout(authToken: string | null) {
+    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/logout', {
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + authToken
+        }
+    })
+    const data = await response.json();
+
+    if (!response.ok) {
+        const err = new Error(data.msg || 'res is not ok for logout') as Error & { statusCode: number }
         err.statusCode = response.status
         throw err;
     }

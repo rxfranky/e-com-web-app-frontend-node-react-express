@@ -13,7 +13,7 @@ export default function Homepage() {
                         <span className="leading-none">BOOK,</span>
                         <span className="leading-none">AND YOU.</span>
                     </div>
-                    <img src={"https://res.cloudinary.com/dtgh4iqul/image/upload/v1772035166/bg-image_jayfki.avif"} alt="background image" className="object-cover h-full w-full" />
+                    <img src={"https://res.cloudinary.com/dtgh4iqul/image/upload/v1780078563/bg-image_cakl3h.avif"} alt="background image" className="object-cover h-full w-full" />
                 </main>
             </section>
 

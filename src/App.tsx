@@ -4,8 +4,6 @@ import Products from './pages/products'
 import RootComponent from './components/root-component'
 import Homepage from './pages/homepage'
 import AddProduct from './pages/add-product'
-import Signup from './pages/signup'
-import Login from './pages/login'
 import Orders from './pages/orders'
 import OrderDetail from './pages/order-detail'
 import ChangePassword from './pages/change-password'
@@ -13,6 +11,7 @@ import ResetPassword from './pages/reset-password'
 import AdminProducts from './pages/admin-products'
 import Error from './pages/error'
 import NewPassword from './pages/new-password'
+import Auth from './pages/auth'
 
 
 export const router = createBrowserRouter([
@@ -41,17 +40,12 @@ export const router = createBrowserRouter([
         element: <AddProduct />
       },
       {
-        path: 'signup',
-        errorElement: <Error />,
-        element: <Signup />
-      },
-      {
-        path: 'login',
+        path: 'auth',
         children: [
           {
             index: true,
             errorElement: <Error />,
-            element: <Login />
+            element: <Auth />
           },
           {
             path: 'changePassword',
@@ -93,4 +87,3 @@ export const router = createBrowserRouter([
     ]
   },
 ])
-

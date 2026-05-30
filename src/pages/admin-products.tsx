@@ -1,13 +1,14 @@
 import Product from "../components/product"
 import type { JSX } from "react";
 import { useQuery } from "@tanstack/react-query"
-import { fetchProducts } from "../util/http-requests"
+import { fetchProducts } from "../utils/http-requests"
 import Error from "./error"
 import { useSearchParams } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
 import { handleShowProfile as handleShowProfileAction } from '../store/show/show-slice'
 import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
 import { useEffect } from "react";
+import { Spinner } from '@/components/ui/spinner'
 
 
 type queRes = {
@@ -19,7 +20,7 @@ type queRes = {
 
 export default function AdminProducts(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams()
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.isLoggedIn)
+    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
     const dispatch = useDispatch()
     const show = useSelector((state: any) => state.showStateChanger)
 
@@ -51,7 +52,7 @@ export default function AdminProducts(): JSX.Element {
                         {data?.products.length === 0 ? (
                             <p className="text-4xl tracking-wide text-bStoreCol">No products by You</p>
                         ) : isPending ? (
-                            <p className="text-4xl text-center tracking-wide text-bStoreCol">Loading...</p>
+                            <Spinner className="size-10 text-bStoreCol" />
                         ) : isError ? (
                             <Error StatusCode={error.statusCode} msg={error.message} />
                         ) : (

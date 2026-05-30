@@ -1,6 +1,54 @@
 import { motion } from 'motion/react'
+import { useActionState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { subscribe } from '../utils/http-requests'
+import Error from '../pages/error'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import Modal from './modal'
+
+interface resUseMutation {
+    mutate: any;
+    isError: boolean;
+    isPending: boolean;
+    error: any,
+    data: any
+}
 
 export default function Footer() {
+    const [showModal, setShowModal] = useState<boolean>(false)
+    const [isConsent, setIsConsent] = useState<boolean>(true)
+
+    const { mutate, isError, isPending, error, data }: resUseMutation = useMutation({
+        mutationFn: subscribe,
+        mutationKey: ['subscribe'],
+        onSuccess: (data: { subscribed: boolean }) => {
+            if (data.subscribed) {
+                setShowModal(true)
+            }
+        }
+    })
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setShowModal(false)
+        }, 3000);
+        return () => clearTimeout(timerId)
+    }, [showModal])
+
+    function handleSubmit(prevState: any, formData: FormData) {
+        const data = Object.fromEntries(formData)
+        if (!data.consent) {
+            return setIsConsent(false)
+        }
+        mutate(data.email as string)
+    }
+    const [actionState, dispatch, isSubmitting] = useActionState(handleSubmit, null)
+
+    if (isError) {
+        return <Error StatusCode={error.statusCode ?? 504} msg={error.message ?? 'something went wrong with server!'} />
+    }
+
     return (
         <>
             <footer className="mt-20 mb-7 max-sm:h-fit max-sm:mb-5">
@@ -47,34 +95,55 @@ export default function Footer() {
                     <div id="col4" className="col-span-3 max-md:col-span-3 max-md:items-center max-sm:items-center flex flex-col gap-2">
                         <span className="mb-8 text-bStoreCol">Be the First to Know</span>
                         <span className="text-bStoreCol">Signup for our Newsletter</span>
-                        <div className="max-sm:flex max-sm:flex-col max-md:flex max-md:flex-col">
-                            <label htmlFor="email" className="text-bStoreCol">Enter your email here*</label>
-                            <input type="text" id="email" className="py-2 px-2  border-2 border-bStoreCol mt-2 w-64 max-lg:w-50 outline-none" placeholder="Enter email" />
-                            {/* <div className="flex gap-1 items-center mt-1">
-                                <svg viewBox="0 0 20 20" fill="red" width="20" height="20" className="sZDaT7l" aria-hidden="true"><path fill-rule="evenodd" d="M9.5,3 C13.084,3 16,5.916 16,9.5 C16,13.084 13.084,16 9.5,16 C5.916,16 3,13.084 3,9.5 C3,5.916 5.916,3 9.5,3 Z M9.5,4 C6.467,4 4,6.467 4,9.5 C4,12.533 6.467,15 9.5,15 C12.533,15 15,12.533 15,9.5 C15,6.467 12.533,4 9.5,4 Z M10,11 L10,12 L9,12 L9,11 L10,11 Z M10,7 L10,10 L9,10 L9,7 L10,7 Z"></path></svg>
-                                <span className="text-red-600">Enter an email address</span>
-                            </div> */}
-                        </div>
-                        <div>
-                            <div className="flex justify-between w-64 mb-1">
-                                <div className="flex gap-1 items-center">
-                                    <input type="checkbox" name="" id="" className="accent-bStoreCol" />
-                                    <p className="w-27.75 h-17.25 overflow-hidden text-bStoreCol">Yes, subscribe to your newsletter.</p>
-                                </div>
-                                <motion.button
-                                    className="py-2 h-fit max-lg:mr-4 px-6 bg-bStoreCol text-white"
-                                    whileHover={{
-                                        backgroundColor: 'white',
-                                        color: 'rgb(14, 52, 90)'
-                                    }}
-                                    transition={{ duration: 0.4 }}
-                                >Subscribe</motion.button>
+                        <form action={dispatch}>
+                            <div className="max-sm:flex max-sm:flex-col max-md:flex max-md:flex-col">
+                                <label htmlFor="email" className="text-bStoreCol">Enter your email here*</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name='email'
+                                    className="py-2 px-2  border-2 border-bStoreCol mt-2 w-64 max-lg:w-50 outline-none"
+                                    placeholder="enter email"
+                                    autoComplete='email'
+                                />
+                                {(data && data.invalidInputs) && (
+                                    <div className="flex gap-1 items-center mt-1">
+                                        <svg viewBox="0 0 20 20" fill="red" width="20" height="20" className="sZDaT7l" aria-hidden="true"><path fillRule="evenodd" d="M9.5,3 C13.084,3 16,5.916 16,9.5 C16,13.084 13.084,16 9.5,16 C5.916,16 3,13.084 3,9.5 C3,5.916 5.916,3 9.5,3 Z M9.5,4 C6.467,4 4,6.467 4,9.5 C4,12.533 6.467,15 9.5,15 C12.533,15 15,12.533 15,9.5 C15,6.467 12.533,4 9.5,4 Z M10,11 L10,12 L9,12 L9,11 L10,11 Z M10,7 L10,10 L9,10 L9,7 L10,7 Z"></path></svg>
+                                        <span className="text-red-600 pb-1">
+                                            {data.valiErrors[0].msg}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
-                            {/* <div className="flex gap-1 items-center">
-                                <svg viewBox="0 0 20 20" fill="red" width="20" height="20" className="sZDaT7l" aria-hidden="true"><path fill-rule="evenodd" d="M9.5,3 C13.084,3 16,5.916 16,9.5 C16,13.084 13.084,16 9.5,16 C5.916,16 3,13.084 3,9.5 C3,5.916 5.916,3 9.5,3 Z M9.5,4 C6.467,4 4,6.467 4,9.5 C4,12.533 6.467,15 9.5,15 C12.533,15 15,12.533 15,9.5 C15,6.467 12.533,4 9.5,4 Z M10,11 L10,12 L9,12 L9,11 L10,11 Z M10,7 L10,10 L9,10 L9,7 L10,7 Z"></path></svg>
-                                <span className="text-red-600">Check the box to continue.</span>
-                            </div> */}
-                        </div>
+                            <div>
+                                <div className="flex justify-between w-64 mb-1">
+                                    <div className="flex gap-1 items-center">
+                                        <input
+                                            type="checkbox"
+                                            name="consent"
+                                            className="accent-bStoreCol"
+                                        />
+                                        <p className="w-27.75 h-17.25 overflow-hidden text-bStoreCol">Yes, subscribe to your newsletter.</p>
+                                    </div>
+                                    <motion.button
+                                        className="py-2 mt-4 h-fit cursor-pointer max-lg:mr-4 w-[116px] overflow-clip text-nowrap bg-bStoreCol text-white"
+                                        whileHover={{
+                                            backgroundColor: 'white',
+                                            color: 'rgb(14, 52, 90)'
+                                        }}
+                                        transition={{ duration: 0.4 }}
+                                    >
+                                        {isSubmitting ? 'Submitting' : isPending ? 'Subscribbing' : 'Subscribe'}
+                                    </motion.button>
+                                </div>
+                                {!isConsent && (
+                                    <div className="flex gap-1 items-center">
+                                        <svg viewBox="0 0 20 20" fill="red" width="20" height="20" className="sZDaT7l" aria-hidden="true"><path fillRule="evenodd" d="M9.5,3 C13.084,3 16,5.916 16,9.5 C16,13.084 13.084,16 9.5,16 C5.916,16 3,13.084 3,9.5 C3,5.916 5.916,3 9.5,3 Z M9.5,4 C6.467,4 4,6.467 4,9.5 C4,12.533 6.467,15 9.5,15 C12.533,15 15,12.533 15,9.5 C15,6.467 12.533,4 9.5,4 Z M10,11 L10,12 L9,12 L9,11 L10,11 Z M10,7 L10,10 L9,10 L9,7 L10,7 Z"></path></svg>
+                                        <span className="text-red-600 pb-1">Check the box to continue.</span>
+                                    </div>
+                                )}
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -89,6 +158,14 @@ export default function Footer() {
                     </span>
                 </div>
             </footer>
+            {showModal && (
+                createPortal(
+                    <Modal showDialog={showModal}>
+                        'Subscribed success!'
+                    </Modal>,
+                    document.getElementById('modal')!
+                )
+            )}
         </>
     )
 }

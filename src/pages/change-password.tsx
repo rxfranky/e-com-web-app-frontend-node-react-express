@@ -1,7 +1,7 @@
 import FormComponent from "../components/form-component";
 import { useActionState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { changePassword } from "../util/http-requests";
+import { changePassword } from "../utils/http-requests";
 import Error from "./error";
 import { useNavigate, useLocation } from "react-router";
 import { useState, useEffect } from "react";
@@ -10,6 +10,8 @@ import Modal from "../components/modal";
 import { useSelector, useDispatch } from "react-redux"
 import { handleShowProfile as handleShowProfileAction } from '../store/show/show-slice'
 import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
+import { Spinner } from "@/components/ui/spinner"
+import { motion } from 'motion/react'
 
 
 type mutationRes = {
@@ -21,7 +23,7 @@ type mutationRes = {
 }
 
 export default function ChangePassword() {
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.isLoggedIn)
+    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
     const [formState, formAction, isFormSubmitting] = useActionState(handleFormSubmit, null)
     const navigate = useNavigate()
     const location = useLocation()
@@ -42,7 +44,7 @@ export default function ChangePassword() {
         onSuccess: (data) => {
             if (data.passwordChanged) {
                 setTimeout(() => {
-                    navigate('/login')
+                    navigate('/auth')
                 }, 3000)
                 setShowDialog(true)
             }
@@ -80,7 +82,15 @@ export default function ChangePassword() {
                     <FormComponent label="New Password" name="newPassword" />
                     <FormComponent label="New Confirm Password" name="newConfirmPassword" />
                     <div className="flex justify-end">
-                        <button className="py-1.5 w-[140px] text-nowrap overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? 'Changing password...' : isFormSubmitting ? 'Submitting...' : 'Change Password'}</button>
+                        <motion.button
+                            className="py-1.5 px-2 flex justify-center items-center gap-2 rounded-sm cursor-pointer bg-white text-bStoreCol text-nowrap"
+                            layout
+                        >
+                            {isPending ? (<>
+                                <Spinner data-icon='inline-start' className="size-5" />
+                                Changing pass...
+                            </>) : isFormSubmitting ? 'Submitting...' : 'Change Password'}
+                        </motion.button>
                     </div>
                 </form>
             </div>

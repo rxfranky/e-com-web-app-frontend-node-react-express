@@ -2,13 +2,14 @@ import { useState } from "react";
 import { AnimatePresence, motion } from 'motion/react'
 import type { JSX } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { addToCart, checkout, deleteProduct } from "../util/http-requests";
+import { addToCart, checkout, deleteProduct } from "../utils/http-requests";
 import Error from "../pages/error";
 import Modal from "../components/modal"
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 import { useEffect } from "react";
+import { Spinner } from '@/components/ui/spinner'
 
 interface Props {
     imageSrc: string;
@@ -147,17 +148,26 @@ export default function Product({ forProductsPage, imageSrc, title, price, btnTi
                             initial={{ opacity: 0 }}
                         >
                             <button
-                                className={`bg-bStoreCol py-2 max-sm:py-4 ${!forProductsPage ? "border-2 border-white w-full" : "w-[102px]"} text-white cursor-pointer`}
+                                className={`bg-bStoreCol py-2 max-sm:py-4 ${!forProductsPage ? "border-2 border-white w-full gap-2" : "w-[102px] gap-1.5"} text-white cursor-pointer flex items-center justify-center `}
                                 onClick={btnTitle_1?.trim().toLowerCase() === 'edit' ? handleEdit : handleAddToCart}
                             >
-                                {isPending ? 'Adding...' : btnTitle_1}
+                                {isPending ? (<>
+                                    <Spinner data-icon='inline-start' className={`${forProductsPage ? 'size-5' : 'size-5'}`} />
+                                    Adding...
+                                </>) : btnTitle_1}
                             </button>
                             {forProductsPage &&
                                 <button
-                                    className={`bg-bStoreCol cursor-pointer w-[102px] py-2 max-sm:py-4 ${!forProductsPage && "border-2 border-white"} text-white`}
+                                    className={`bg-bStoreCol cursor-pointer w-[102px] py-2 max-sm:py-4 ${!forProductsPage && "border-2 border-white"} gap-1.5 text-white flex items-center justify-center`}
                                     onClick={btnTitle_2?.trim().toLowerCase() === 'delete' ? handleDelete : handleBuy}
                                 >
-                                    {bIsPending ? 'Checking...' : dIspending ? 'Deleting...' : btnTitle_2}
+                                    {bIsPending ? (<>
+                                        <Spinner data-icon='inline-start' className="size-5" />
+                                        Checking...
+                                    </>) : dIspending ? (<>
+                                        <Spinner data-icon='inline-start' className="size-5" />
+                                        Deleting...
+                                    </>) : btnTitle_2}
                                 </button>
                             }
                         </motion.div>

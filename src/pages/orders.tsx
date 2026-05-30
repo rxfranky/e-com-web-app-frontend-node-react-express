@@ -2,12 +2,13 @@ import type { JSX } from "react"
 import { NavLink } from "react-router"
 import { motion } from 'motion/react'
 import { useQuery } from "@tanstack/react-query"
-import { fetchOrders } from "../util/http-requests"
+import { fetchOrders } from "../utils/http-requests"
 import Error from "./error"
 import { useSelector, useDispatch } from "react-redux"
 import { handleShowProfile as handleShowProfileAction } from '../store/show/show-slice'
 import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
 import { useEffect } from "react"
+import { Spinner } from "@/components/ui/spinner"
 
 
 interface queRes {
@@ -19,7 +20,7 @@ interface queRes {
 
 export default function Orders(): JSX.Element {
     const show = useSelector((state: any) => state.showStateChanger)
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.isLoggedIn)
+    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -42,10 +43,12 @@ export default function Orders(): JSX.Element {
                 <div className="text-4xl font-bold tracking-wide text-bStoreCol">Your Orders</div>
                 <div className="h-0.5 bg-bStoreCol mt-3 mb-9 w-[80vw]"></div>
                 {isPending && (
-                    <p className="text-4xl text-center mt-12 tracking-wide text-bStoreCol">Loading...</p>
+                    <div className="flex justify-center">
+                        <Spinner className="size-10 text-bStoreCol" />
+                    </div>
                 )}
                 {(data && data.noOrders) && (
-                    <p className="text-4xl text-center mt-12 tracking-wide text-bStoreCol">{data.msg}</p>
+                    <p className="text-4xl text-center tracking-wide text-bStoreCol">{data.msg}</p>
                 )}
                 {isError && (
                     <Error StatusCode={error.statusCode} msg={error.message} />

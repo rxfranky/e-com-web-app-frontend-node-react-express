@@ -1,22 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getAuthState } from "../../utils/http-requests";
+
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        isLoggedIn: localStorage.getItem('authToken') ? true : false,
-        email: localStorage.getItem('email'),
-        name: localStorage.getItem('name')
+        authState: localStorage.getItem('authToken') ? await getAuthState() : { isLoggedIn: false }
     },
     reducers: {
         login: (state, action) => {
-            state.isLoggedIn = true
-            state.email = action.payload.email
-            state.name = action.payload.name
+            state.authState = {
+                userData: {
+                    name: action.payload.name,
+                    email: action.payload.email
+                },
+                isLoggedIn: true
+            }
         },
         logout(state) {
-            state.isLoggedIn = false
-            state.email = null
-            state.name = null
+            state.authState = { isLoggedIn: false }
         }
     }
 })

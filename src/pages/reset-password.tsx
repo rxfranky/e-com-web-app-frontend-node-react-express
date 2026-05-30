@@ -2,7 +2,9 @@ import FormComponent from "../components/form-component";
 import { useActionState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "./error";
-import { resetPassword } from "../util/http-requests";
+import { resetPassword } from "../utils/http-requests";
+import { Spinner } from "@/components/ui/spinner";
+import { motion } from 'motion/react'
 
 
 type mutationRes = {
@@ -36,7 +38,15 @@ export default function ResetPassword() {
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="Email" name="email" />
                     <div className="flex justify-end">
-                        <button className="py-1.5 w-[124px] text-nowrap overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">{isFormSubmitting ? 'Submitting form...' : isPending ? 'Sending reset email...' : 'Reset Password'}</button>
+                        <motion.button
+                            className="py-1.5 px-2 rounded-sm flex justify-center text-nowrap items-center cursor-pointer bg-white text-bStoreCol gap-2"
+                            layout
+                        >
+                            {isFormSubmitting ? 'Submitting form...' : isPending ? (<>
+                                <Spinner data-icon='inline-start' className="size-5" />
+                                Sending email...
+                            </>) : 'Reset Password'}
+                        </motion.button>
                     </div>
                 </form>
             </div>

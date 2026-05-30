@@ -2,7 +2,7 @@ import type { JSX } from "react"
 import FormComponent from "../components/form-component"
 import { NavLink } from "react-router"
 import { useMutation } from "@tanstack/react-query"
-import { login } from "../util/http-requests"
+import { login } from "../utils/http-requests"
 import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router"
 import Error from "./error"
@@ -87,7 +87,7 @@ export default function Login(): JSX.Element {
                                 <NavLink to={'resetPassword'}>
                                     <span className="cursor-pointer text-white">Reset Password</span>
                                 </NavLink>
-                                <button className="py-1.5 w-[85px] text-nowrap  overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">
+                                <button className="py-1.5 w-[85px] text-nowrap overflow-clip h-fit cursor-pointer bg-white text-bStoreCol">
                                     {isPending ? 'Logging in...' : isFormSubmitting ? 'Submitting...' : 'Login'}
                                 </button>
                             </div>

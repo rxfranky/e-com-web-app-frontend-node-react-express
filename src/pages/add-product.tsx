@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { useLocation } from "react-router"
 import { useActionState } from "react"
 import Error from "./error"
-import { addProduct } from "../util/http-requests"
+import { addProduct } from "../utils/http-requests"
 import { useNavigate } from "react-router"
 import { createPortal } from "react-dom"
 import Modal from "../components/modal"
@@ -13,6 +13,8 @@ import { useSearchParams } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
 import { handleShowProfile as handleShowProfileAction } from '../store/show/show-slice'
 import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
+import { Spinner } from '@/components/ui/spinner'
+import { motion } from 'motion/react'
 
 
 interface mutationRes {
@@ -89,7 +91,19 @@ export default function AddProduct(): JSX.Element {
                         <input className="p-1 pl-3 w-[50vw] bg-white" type="file" name="image" id="image" />
                     </div>
                     <div className="flex justify-end">
-                        <button className="py-1.5 w-[105px] text-nowrap overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">{isFormSubmitting ? 'submitting...' : isPending ? 'Adding product...' : 'Add Product'}</button>
+                        <motion.button
+                            className="py-1.5 px-2 rounded-sm text-nowrap cursor-pointer bg-white text-bStoreCol flex items-center justify-center gap-1.5"
+                            layout
+                        >
+
+                            {isFormSubmitting ? (<>
+                                <Spinner data-icon='inline-start' className="size-5" />
+                                Submitting...
+                            </>) : isPending ? (<>
+                                <Spinner data-icon='inline-start' className="size-5" />
+                                Adding...
+                            </>) : 'Add Product'}
+                        </motion.button>
                     </div>
                 </form>
             </div>

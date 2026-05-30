@@ -2,7 +2,7 @@ import type { JSX } from "react"
 import FormComponent from "../components/form-component"
 import { useActionState } from "react"
 import { useMutation } from "@tanstack/react-query"
-import { signup } from "../util/http-requests"
+import { signup } from "../utils/http-requests"
 import Error from "./error"
 import Modal from "../components/modal"
 import { createPortal } from "react-dom"
@@ -56,7 +56,7 @@ export default function Signup(): JSX.Element {
     if (isError) {
         return (
             <>
-                <Error StatusCode={error.StatusCode ?? 504} msg={error.message ?? 'something went worg with server!'} />
+                <Error StatusCode={error.statusCode ?? 504} msg={error.message ?? 'something went worg with server!'} />
             </>
         )
     }
@@ -70,7 +70,7 @@ export default function Signup(): JSX.Element {
                     <FormComponent label="Password" name="password" />
                     <FormComponent label="Confirm Password" name="confirmPassword" />
                     <div className="flex justify-end">
-                        <button className="py-1.5 px-2 w-[106px] text-nowrap overflow-clip h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? "Signing up..." : 'Signup'}</button>
+                        <button className="py-1.5 w-[106px] text-nowrap overflow-clip h-fit cursor-pointer bg-white text-bStoreCol">{isPending ? "Signing up..." : 'Signup'}</button>
                     </div>
                 </form>
             </div>

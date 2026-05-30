@@ -7,8 +7,10 @@ import Error from "./error"
 import Modal from "../components/modal"
 import { useActionState } from "react"
 import { createPortal } from "react-dom"
-import { newPassword } from "../util/http-requests"
+import { newPassword } from "../utils/http-requests"
 import { useSearchParams } from "react-router"
+import { Spinner } from "@/components/ui/spinner"
+import { motion } from 'motion/react'
 
 
 interface resMutation {
@@ -35,7 +37,7 @@ export default function NewPassword(): JSX.Element {
             onSuccess: (data) => {
                 if (data.newPassword) {
                     setTimeout(() => {
-                        navigate('/login')
+                        navigate('/auth')
                     }, 3000);
                     setShowDialog(true)
                 }
@@ -64,11 +66,17 @@ export default function NewPassword(): JSX.Element {
             <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="New Password" name="newPassword" />
-                    <FormComponent label="Password" name="newConfirmPassword" />
+                    <FormComponent label="New Confirm Password" name="newConfirmPassword" />
                     <div className="flex justify-end gap-3 items-center">
-                        <button className="py-1.5 w-[100px] text-nowrap overflow-clip px-2 h-fit cursor-pointer bg-white text-bStoreCol">
-                            {isPending ? ' Password Reseting...' : isFormSubmitting ? 'Submitting...' : 'Reset'}
-                        </button>
+                        <motion.button
+                            className="py-1.5 flex justify-center text-nowrap items-center gap-2 rounded-sm px-2 cursor-pointer bg-white text-bStoreCol"
+                            layout
+                        >
+                            {isPending ? (<>
+                                <Spinner data-icon='inline-start' className="size-5" />
+                                Password Resetting...
+                            </>) : isFormSubmitting ? 'Submitting...' : 'Reset'}
+                        </motion.button>
                     </div>
                 </form>
             </div>
@@ -76,9 +84,6 @@ export default function NewPassword(): JSX.Element {
                 createPortal(<Modal showDialog={showDialog}>{data.msg} redirecting...</Modal>,
                     document.querySelector('#modal')!))
             }
-            {((data && data.tokenExpired)) && (
-                <ul className="m-auto w-[60vw]"><li className="bg-red-300 p-2 rounded-md mb-2">{data.msg}</li></ul>
-            )}
             {(data && data.invalidInputs) && (
                 <ul className="m-auto w-[60vw]">
                     {data.valiErrors.map((err: any) => <li className="bg-red-300 p-2 rounded-md mb-2">{err.msg}</li>)}

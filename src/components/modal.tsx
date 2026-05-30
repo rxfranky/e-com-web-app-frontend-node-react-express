@@ -1,16 +1,19 @@
 import type { ReactNode } from "react";
 import { useRef, memo, useEffect } from "react";
 
-export default memo(function Modal({ children, showDialog }: { children: ReactNode; showDialog: boolean }) {
+
+export default memo(function Modal(
+    { children, showDialog }: { children: ReactNode; showDialog: boolean }
+) {
     const dialogRef = useRef<HTMLDialogElement>(null)
 
     useEffect(() => {
         if (showDialog) {
             dialogRef.current?.showModal()
-        } else {
-            dialogRef.current?.close()
         }
+        return () => dialogRef.current?.close()
     }, [showDialog])
+
     return (
         <>
             <dialog ref={dialogRef}>
