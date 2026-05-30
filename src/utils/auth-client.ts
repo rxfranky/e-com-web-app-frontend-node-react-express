@@ -1,6 +1,6 @@
 import { createAuthClient } from "better-auth/react"
 
-async function getToken() {
+export async function getoAuthToken() {
     const { data } = await createAuthClient({
         baseURL: 'https://e-com-practice-backend.onrender.com'
     }).getSession()
@@ -13,7 +13,7 @@ export const authClient = createAuthClient({
     fetchOptions: {
         headers: {
             authToken: 'Bearer ' + localStorage.getItem('authToken'),
-            oAuthToken: 'Bearer ' + await getToken()
+            oAuthToken: 'Bearer ' + await getoAuthToken()
         }
     }
 })

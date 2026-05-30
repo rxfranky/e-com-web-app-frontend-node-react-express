@@ -38,9 +38,6 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
         }
     })
 
-    if (isError) {
-        return <Error StatusCode={error?.statusCode} msg={error?.msg} />
-    }
 
     async function logout() {
         if (data) {
@@ -72,6 +69,10 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
         setShowCart(val => !val)
     }
 
+    if (isError) {
+        return <Error StatusCode={error?.statusCode} msg={error?.msg} />
+    }
+    
     return (
         <>
             <AnimatePresence>
