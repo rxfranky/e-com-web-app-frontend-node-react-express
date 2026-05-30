@@ -82,13 +82,13 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
     return (
         <div id="bookSection" className={`flex gap-5 max-sm:gap-2 ${atTop && "absolute -top-23 max-sm:top-10"} `}>
             <span onClick={handleLeftArrow} className="mt-18 max-sm:mt-27 cursor-pointer">
-                <svg viewBox="0 0 24 24" fill={`${atTop ? 'rgb(14, 52, 90)' : 'white'}`} width="24" height="24" className="rN6xZT"><path fillRule="evenodd" d="M15.0729595,5 L15.7800663,5.70710678 L9.41020654,12.074 L15.7800663,18.4363861 L15.0729595,19.1434929 L7.99920654,12.077895 L8.00220654,12.074 L8,12.0717464 L15.0729595,5 Z"></path></svg>
+                <svg viewBox="0 0 24 24" fill={`${(atTop && window.outerWidth < 640) ? 'white' : atTop ? 'rgb(14, 52, 90)' : 'white'}`} width="24" height="24" className="rN6xZT"><path fillRule="evenodd" d="M15.0729595,5 L15.7800663,5.70710678 L9.41020654,12.074 L15.7800663,18.4363861 L15.0729595,19.1434929 L7.99920654,12.077895 L8.00220654,12.074 L8,12.0717464 L15.0729595,5 Z"></path></svg>
             </span>
             <div id="products" className="flex gap-5">
                 {isError ? (
                     <Error StatusCode={error.statusCode} msg={error.message} />
                 ) : isPending ? (
-                    <Spinner className={`size-10 ${atTop ? 'text-bStoreCol' : 'text-white'}`} />
+                    <Spinner className={`size-10 ${atTop ? 'text-bStoreCol max-sm:text-white' : 'text-white'}`} />
                 ) : data?.products.length === 0 ? (
                     <p className={`text-4xl tracking-wide ${atTop ? 'text-bStoreCol' : 'text-white'}`}>Store is Empty</p>
                 ) :
@@ -96,7 +96,7 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
                 }
             </div>
             <span onClick={handleRightArrow} className="mt-18 max-sm:mt-27 cursor-pointer">
-                <svg viewBox="0 0 24 24" fill={`${atTop ? 'rgb(14, 52, 90)' : 'white'}`} width="24" height="24" className="rN6xZT"><path fillRule="evenodd" d="M8.70710678,4.99810828 L15.068,11.3651083 L15.0722115,11.3620693 L15.7793183,12.0691761 L15.776,12.0721083 L15.7782433,12.0758831 L15.0711365,12.7829899 L15.069,12.7801083 L8.70710678,19.1434929 L8,18.4363861 L14.361,12.0721083 L8,5.70521506 L8.70710678,4.99810828 Z"></path></svg>
+                <svg viewBox="0 0 24 24" fill={`${(atTop && window.outerWidth < 640) ? 'white' : atTop ? 'rgb(14, 52, 90)' : 'white'}`} width="24" height="24" className="rN6xZT"><path fillRule="evenodd" d="M8.70710678,4.99810828 L15.068,11.3651083 L15.0722115,11.3620693 L15.7793183,12.0691761 L15.776,12.0721083 L15.7782433,12.0758831 L15.0711365,12.7829899 L15.069,12.7801083 L8.70710678,19.1434929 L8,18.4363861 L14.361,12.0721083 L8,5.70521506 L8.70710678,4.99810828 Z"></path></svg>
             </span>
         </div>
     )
