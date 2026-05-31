@@ -21,7 +21,7 @@ export async function signup(userData: any) {
 
 export async function login(loginData: any) {
     const authToken: string | null = localStorage.getItem('authToken')
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/login', {
         body: JSON.stringify({ email: loginData.email, password: loginData.password }),
         method: 'POST',
         headers: {
@@ -263,7 +263,7 @@ export async function subscribe(email: string) {
 
 export async function getAuthState(): Promise<{ userData: { name: string; email: string } }> {
     const authToken = localStorage.getItem('authToken');
-    const response = await fetch('http://localhost:3000/auth/getAuthState', {
+    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/getAuthState', {
         method: 'GET',
         headers: {
             Authorization: 'Bearer ' + authToken
@@ -282,7 +282,7 @@ export async function getAuthState(): Promise<{ userData: { name: string; email:
 }
 
 export async function logout(authToken: string | null) {
-    const response = await fetch('http://localhost:3000/auth/logout', {
+    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/logout', {
         method: 'POST',
         headers: {
             Authorization: 'Bearer ' + authToken

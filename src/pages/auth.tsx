@@ -115,7 +115,7 @@ export default function Auth(): JSX.Element {
                 >
                     <motion.div
                         id="LEFT or TOP"
-                        className={`bg-bStoreCol text-white w-[35%] h-full max-sm:w-full max-sm:h-[41%] flex flex-col items-center justify-center gap-7 max-sm:gap-3 ${isSignupMode ? "lg:rounded-l-xl max-sm:rounded-t-xl order-1" : "lg:rounded-r-xl max-sm:rounded-b-xl 2 order-2"}`}
+                        className={`bg-bStoreCol text-white w-[35%] h-full max-sm:w-full max-sm:h-[43%] flex flex-col items-center justify-center gap-7 max-sm:gap-3 ${isSignupMode ? "lg:rounded-l-xl max-sm:rounded-t-xl order-1" : "lg:rounded-r-xl max-sm:rounded-b-xl 2 order-2"}`}
                         layout
                         transition={{ ease: 'easeInOut', duration: 0.6 }}
                     >
