@@ -13,6 +13,11 @@ dialog {
   margin: auto;
 }
 
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 @theme {
   --color-bStoreCol: rgb(14, 52, 90);
 }

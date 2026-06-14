@@ -2,7 +2,7 @@ import { getoAuthToken } from "./auth-client"
 
 
 export async function signup(userData: any) {
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/signup', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
         method: 'POST',
         body: JSON.stringify(userData),
         headers: {
@@ -21,7 +21,7 @@ export async function signup(userData: any) {
 
 export async function login(loginData: any) {
     const authToken: string | null = localStorage.getItem('authToken')
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/login', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
         body: JSON.stringify({ email: loginData.email, password: loginData.password }),
         method: 'POST',
         headers: {
@@ -43,7 +43,7 @@ export async function login(loginData: any) {
 export async function changePassword(data: any) {
     const authToken: string | null = localStorage.getItem('authToken')
 
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/changePassword', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/changePassword`, {
         method: 'PATCH',
         body: JSON.stringify(data),
         headers: {
@@ -62,7 +62,7 @@ export async function changePassword(data: any) {
 
 
 export async function resetPassword(data: any) {
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/resetPassword', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/resetPassword`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -80,7 +80,7 @@ export async function resetPassword(data: any) {
 
 
 export async function newPassword(data: any) {
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/newPassword', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/newPassword`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -99,7 +99,7 @@ export async function newPassword(data: any) {
 export async function addProduct(data: any) {
     const authToken: string | null = localStorage.getItem('authToken');
 
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/admin/addProduct${data.product_id ? '?product_id=' + data.product_id : ''}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/addProduct${data.product_id ? '?product_id=' + data.product_id : ''}`, {
         method: 'POST',
         body: data.formData,
         headers: {
@@ -119,7 +119,7 @@ export async function addProduct(data: any) {
 export async function fetchProducts(signal: any, queryParam?: string, isAdmin?: boolean) {
     const authToken: string | null = localStorage.getItem('authToken');
 
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/products?page=${queryParam ?? null}&isAdmin=${isAdmin ?? false}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${queryParam ?? null}&isAdmin=${isAdmin ?? false}`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken,
@@ -135,10 +135,10 @@ export async function fetchProducts(signal: any, queryParam?: string, isAdmin?: 
     return resData
 }
 
-export async function addToCart(id: number) {
+export async function addToCart({id, quantity}:{id:number; quantity?:number}) {
     const authToken: string | null = localStorage.getItem('authToken')
 
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/addToCart/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/addToCart/${id}/?quantity=${quantity??null}`, {
         headers: {
             authToken: 'Bearer ' + authToken,
             oAuthToken: 'Bearer ' + await getoAuthToken()
@@ -156,7 +156,7 @@ export async function addToCart(id: number) {
 
 export async function fetchCart({ signal }: { signal: any }) {
     const authToken = localStorage.getItem('authToken')
-    const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/fetchCart', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/fetchCart`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken,
@@ -174,7 +174,7 @@ export async function fetchCart({ signal }: { signal: any }) {
 
 
 export async function quantityControl({ id, action }: { id: number; action: string }) {
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/consumer/quantityControl/${id}?action=${action}`)
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/quantityControl/${id}?action=${action}`)
     const data = await response.json()
     if (!response.ok) {
         const err = new Error(data.msg || 'res is not ok for quntity control') as Error & { statusCode: number }
@@ -186,7 +186,8 @@ export async function quantityControl({ id, action }: { id: number; action: stri
 
 export async function checkout(data: any) {
     const authToken: string | null = localStorage.getItem('authToken')
-    const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/checkout', {
+    
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/checkout`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -207,7 +208,7 @@ export async function checkout(data: any) {
 
 export async function fetchOrders({ signal }: { signal: any }) {
     const authToken: string | null = localStorage.getItem('authToken')
-    const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/fetchOrders', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/fetchOrders`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken,
@@ -225,7 +226,7 @@ export async function fetchOrders({ signal }: { signal: any }) {
 
 export async function deleteProduct(id: number) {
     const authToken: string | null = localStorage.getItem('authToken')
-    const response = await fetch(`https://e-com-practice-backend.onrender.com/admin/deleteProduct/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/deleteProduct/${id}`, {
         method: 'DELETE',
         headers: {
             authToken: 'Bearer ' + authToken,
@@ -242,7 +243,7 @@ export async function deleteProduct(id: number) {
 }
 
 export async function subscribe(email: string) {
-    const response = await fetch('https://e-com-practice-backend.onrender.com/consumer/subscribe', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/subscribe`, {
         body: JSON.stringify({ email }),
         method: 'POST',
         headers: {
@@ -263,7 +264,7 @@ export async function subscribe(email: string) {
 
 export async function getAuthState(): Promise<{ userData: { name: string; email: string } }> {
     const authToken = localStorage.getItem('authToken');
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/getAuthState', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/getAuthState`, {
         method: 'GET',
         headers: {
             Authorization: 'Bearer ' + authToken
@@ -282,7 +283,7 @@ export async function getAuthState(): Promise<{ userData: { name: string; email:
 }
 
 export async function logout(authToken: string | null) {
-    const response = await fetch('https://e-com-practice-backend.onrender.com/auth/logout', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
         method: 'POST',
         headers: {
             Authorization: 'Bearer ' + authToken
@@ -294,6 +295,22 @@ export async function logout(authToken: string | null) {
         const err = new Error(data.msg || 'res is not ok for logout') as Error & { statusCode: number }
         err.statusCode = response.status
         throw err;
+    }
+    return data;
+}
+
+
+export async function getSearchedProduct(formData: { search?: string }) {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/getSearchedProduct/?searchText=${formData.search}`)
+
+    const data = await response.json()
+
+    if (!response.ok) {
+        const err = new Error(data.msg || 'response is not for get product') as Error & {
+            statusCode: number
+        }
+        err.statusCode = response.status
+        throw err
     }
     return data;
 }

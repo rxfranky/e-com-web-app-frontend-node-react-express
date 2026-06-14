@@ -60,7 +60,7 @@ export default function Orders(): JSX.Element {
                                 <span className="font-semibold">Order id-</span>
                                 <span className="font-semibold lg:w-[571px] md:w-[250px] w-[120px] overflow-clip">{orderItem.order_id}</span>
                             </div>
-                            <NavLink to={`https://e-com-practice-backend.onrender.com/consumer/downloadInvoice/${orderItem.order_id}`}>
+                            <NavLink to={`${import.meta.env.VITE_BACKEND_URL}/consumer/downloadInvoice/${orderItem.order_id}`}>
                                 <motion.span
                                     className="font-semibold inline-block mr-3 ml-3"
                                     variants={{ ini: { scale: 1 }, ani: { scale: 1.03 } }}

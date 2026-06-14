@@ -12,6 +12,7 @@ import AdminProducts from './pages/admin-products'
 import Error from './pages/error'
 import NewPassword from './pages/new-password'
 import Auth from './pages/auth'
+import ProductDetail from './pages/product-detail'
 
 
 export const router = createBrowserRouter([
@@ -31,8 +32,18 @@ export const router = createBrowserRouter([
       },
       {
         path: 'products',
-        errorElement: <Error />,
-        element: <Products />
+        children: [
+          {
+            index: true,
+            element: <Products />,
+            errorElement: <Error />,
+          },
+          {
+            path: 'productDetail/:productId',
+            element: <ProductDetail />,
+            errorElement: <Error />
+          }
+        ]
       },
       {
         path: 'add-product',

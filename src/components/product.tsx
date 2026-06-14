@@ -14,6 +14,7 @@ import { Spinner } from '@/components/ui/spinner'
 interface Props {
     imageSrc: string;
     title: string;
+    desc: string;
     price: number;
     btnTitle_1: string;
     btnTitle_2?: string;
@@ -31,7 +32,7 @@ interface mutationRes {
     data?: any
 }
 
-export default function Product({ forProductsPage, imageSrc, title, price, btnTitle_1, btnTitle_2, id, initial = { y: -30 }, animate = { y: 0 } }: Props): JSX.Element {
+export default function Product({ forProductsPage, imageSrc, title, desc, price, btnTitle_1, btnTitle_2, id, initial = { y: -30 }, animate = { y: 0 } }: Props): JSX.Element {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const { pathname } = useLocation()
     const navigate = useNavigate()
@@ -87,7 +88,7 @@ export default function Product({ forProductsPage, imageSrc, title, price, btnTi
     }
 
     function handleAddToCart() {
-        mutate(id)
+        mutate({id})
     }
 
     function handleBuy() {
@@ -108,73 +109,73 @@ export default function Product({ forProductsPage, imageSrc, title, price, btnTi
 
     return (
         <>
-            <AnimatePresence>
-                <motion.div
-                    id="product"
-                    onMouseEnter={handleShowDatailBtn}
-                    onMouseLeave={handleShowDatailBtn}
-                    className={`w-42 h-73 ${forProductsPage && "w-65 h-94"} max-sm:w-69 max-sm:h-110`}
-                    initial={{ ...initial, opacity: 0 }}
-                    animate={{ ...animate, opacity: 1 }}
-                    exit={{ ...initial, opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <div className={`h-44 ${forProductsPage && "h-65"} bg-gray-100 flex items-center justify-center relative max-sm:h-71`}>
-                        <motion.img
-                            src={imageSrc}
-                            alt={`image of ${title}`}
-                            className={`h-36 object-cover w-28 ${forProductsPage && "h-55 w-45"} max-sm:w-55 max-sm:h-63`}
-                        />
+            <motion.div
+                id="product"
+                onMouseEnter={handleShowDatailBtn}
+                onMouseLeave={handleShowDatailBtn}
+                className={`w-42 h-73 ${forProductsPage && "w-65 h-94"} max-sm:w-69 max-sm:h-110`}
+                initial={{ ...initial, opacity: 0 }}
+                animate={{ ...animate, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className={`h-44 ${forProductsPage && "h-65"} bg-gray-100 flex items-center justify-center relative max-sm:h-71`}>
+                    <motion.img
+                        src={imageSrc}
+                        alt={`image of ${title}`}
+                        className={`h-36 object-cover w-28 ${forProductsPage && "h-55 w-45"} max-sm:w-55 max-sm:h-63`}
+                    />
 
-                        <AnimatePresence>
-                            {showbtn && <motion.span
-                                initial={{ y: 20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: 20, opacity: 0 }}
-                                className="absolute w-full py-3 text-center bottom-0 bg-white/80 text-black"
-                            >Quick View</motion.span>}
-                        </AnimatePresence>
-                    </div>
-
-                    <div className="flex flex-col items-center max-sm:gap-2 my-3 max-sm:my-5 max-sm:text-xl text-white">
-                        <span className={`${forProductsPage && "text-[#414141]"} text-center w-[120px] overflow-hidden text-nowrap`}>{title}</span>
-                        <span className={`${forProductsPage && "text-[#999997]"} text-center w-20 overflow-clip text-nowrap`}>${price}</span>
-                    </div>
                     <AnimatePresence>
-                        {(showbtn || window.outerWidth <= 640) && <motion.div
-                            className="flex justify-between"
-                            exit={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            initial={{ opacity: 0 }}
+                        {showbtn && <motion.span
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            className="absolute w-full py-3 text-center bottom-0 bg-white/80 text-black cursor-pointer"
+                            onClick={() => navigate('/products/productDetail/' + id + `?title=${title}&imageSrc=${imageSrc}&price=${price}&desc=${desc}`)}
                         >
-                            <button
-                                className={`bg-bStoreCol py-2 max-sm:py-4 ${!forProductsPage ? "border-2 border-white w-full gap-2" : "w-[102px] gap-1.5"} text-white cursor-pointer flex items-center justify-center `}
-                                onClick={btnTitle_1?.trim().toLowerCase() === 'edit' ? handleEdit : handleAddToCart}
-                            >
-                                {isPending ? (<>
-                                    <Spinner data-icon='inline-start' className={`${forProductsPage ? 'size-5' : 'size-5'}`} />
-                                    Adding...
-                                </>) : btnTitle_1}
-                            </button>
-                            {forProductsPage &&
-                                <button
-                                    className={`bg-bStoreCol cursor-pointer w-[102px] py-2 max-sm:py-4 ${!forProductsPage && "border-2 border-white"} gap-1.5 text-white flex items-center justify-center`}
-                                    onClick={btnTitle_2?.trim().toLowerCase() === 'delete' ? handleDelete : handleBuy}
-                                >
-                                    {bIsPending ? (<>
-                                        <Spinner data-icon='inline-start' className="size-5" />
-                                        Checking...
-                                    </>) : dIspending ? (<>
-                                        <Spinner data-icon='inline-start' className="size-5" />
-                                        Deleting...
-                                    </>) : btnTitle_2}
-                                </button>
-                            }
-                        </motion.div>
-                        }
+                            Quick View
+                        </motion.span>}
                     </AnimatePresence>
-                </motion.div>
-            </AnimatePresence>
+                </div>
+
+                <div className="flex flex-col items-center max-sm:gap-2 my-3 max-sm:my-5 max-sm:text-xl text-white">
+                    <span className={`${forProductsPage && "text-[#414141]"} text-center w-[120px] overflow-hidden text-nowrap`}>{title}</span>
+                    <span className={`${forProductsPage && "text-[#999997]"} text-center w-20 overflow-clip text-nowrap`}>${price}</span>
+                </div>
+                <AnimatePresence>
+                    {(showbtn || window.outerWidth <= 640) && <motion.div
+                        className="flex justify-between"
+                        exit={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        initial={{ opacity: 0 }}
+                    >
+                        <button
+                            className={`bg-bStoreCol py-2 max-sm:py-4 ${!forProductsPage ? "border-2 border-white w-full gap-2" : "w-[102px] gap-1.5"} text-white cursor-pointer flex items-center justify-center `}
+                            onClick={btnTitle_1?.trim().toLowerCase() === 'edit' ? handleEdit : handleAddToCart}
+                        >
+                            {isPending ? (<>
+                                <Spinner data-icon='inline-start' className={`${forProductsPage ? 'size-5' : 'size-5'}`} />
+                                Adding...
+                            </>) : btnTitle_1}
+                        </button>
+                        {forProductsPage &&
+                            <button
+                                className={`bg-bStoreCol cursor-pointer w-[102px] py-2 max-sm:py-4 ${!forProductsPage && "border-2 border-white"} gap-1.5 text-white flex items-center justify-center`}
+                                onClick={btnTitle_2?.trim().toLowerCase() === 'delete' ? handleDelete : handleBuy}
+                            >
+                                {bIsPending ? (<>
+                                    <Spinner data-icon='inline-start' className="size-5" />
+                                    Checking...
+                                </>) : dIspending ? (<>
+                                    <Spinner data-icon='inline-start' className="size-5" />
+                                    Deleting...
+                                </>) : btnTitle_2}
+                            </button>
+                        }
+                    </motion.div>
+                    }
+                </AnimatePresence>
+            </motion.div>
             {showDialog && (
                 createPortal(
                     <Modal showDialog={showDialog}>{data ? data.msg : dData.msg}</Modal>,

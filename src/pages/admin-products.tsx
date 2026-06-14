@@ -68,6 +68,7 @@ export default function AdminProducts(): JSX.Element {
                                         price={product.price}
                                         imageSrc={product.image_src}
                                         title={product.title}
+                                        desc={product.description}
                                         btnTitle_1='Edit' btnTitle_2="Delete"
                                     />
                                 ))}

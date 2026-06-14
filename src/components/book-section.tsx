@@ -46,7 +46,7 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
         if (sliceStart > 0) {
             setSliceStart(val => val - 1)
             setSliceEnd(val => val - 1)
-            setInitial({ x: -25 })
+            setInitial({ x: -15 })
             setAnimate({ x: 0 })
         }
     }
@@ -55,30 +55,26 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
         if (sliceEnd < data!.products.length) {
             setSliceEnd(val => val + 1)
             setSliceStart(val => val + 1)
-            setInitial({ x: 25 })
+            setInitial({ x: 15 })
             setAnimate({ x: 0 })
         }
     }
 
     let content;
-    content = (
-        <>
-            {
-                data?.products.slice(sliceStart, sliceEnd).map((product) => (
-                    <Product
-                        btnTitle_1="Add to Cart"
-                        id={product.id}
-                        imageSrc={product.image_src}
-                        price={product.price}
-                        key={product.id}
-                        title={product.title}
-                        initial={initial}
-                        animate={animate}
-                    />)
-                )
-            }
-        </>
-    )
+    content = (data?.products.slice(sliceStart, sliceEnd).map((product) => (
+        <Product
+            btnTitle_1="Add to Cart"
+            id={product.id}
+            imageSrc={product.image_src}
+            price={product.price}
+            key={product.id}
+            title={product.title}
+            desc={product.description}
+            initial={initial}
+            animate={animate}
+        />)
+    ))
+
     return (
         <div id="bookSection" className={`flex gap-5 max-sm:gap-2 ${atTop && "absolute -top-23 max-sm:top-10"} `}>
             <span onClick={handleLeftArrow} className="mt-18 max-sm:mt-27 cursor-pointer">

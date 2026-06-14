@@ -2,14 +2,14 @@ import { createAuthClient } from "better-auth/react"
 
 export async function getoAuthToken() {
     const { data } = await createAuthClient({
-        baseURL: 'https://e-com-practice-backend.onrender.com'
+        baseURL: import.meta.env.VITE_BACKEND_URL
     }).getSession()
 
     return data?.session.token;
 }
 
 export const authClient = createAuthClient({
-    baseURL: 'https://e-com-practice-backend.onrender.com',
+    baseURL: import.meta.env.VITE_BACKEND_URL,
     fetchOptions: {
         headers: {
             authToken: 'Bearer ' + localStorage.getItem('authToken'),

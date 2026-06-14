@@ -98,7 +98,7 @@ export default function Auth(): JSX.Element {
     async function signIn(provider: string) {
         const res = await authClient.signIn.social({
             provider: provider === 'google' ? 'google' : provider === 'discord' ? 'discord' : "github",
-            callbackURL: 'https://e-com-web-app-frontend-node-react-e.vercel.app'
+            callbackURL: import.meta.env.VITE_FRONTEND_URL
         })
 
         if (res.error) {

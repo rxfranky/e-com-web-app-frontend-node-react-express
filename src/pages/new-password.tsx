@@ -67,7 +67,7 @@ export default function NewPassword(): JSX.Element {
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent label="New Password" name="newPassword" />
                     <FormComponent label="New Confirm Password" name="newConfirmPassword" />
-                    <div className="flex justify-end gap-3 items-center">
+                    <div className="flex justify-end">
                         <motion.button
                             className="py-1.5 flex justify-center text-nowrap items-center gap-2 rounded-sm px-2 cursor-pointer bg-white text-bStoreCol"
                             layout
