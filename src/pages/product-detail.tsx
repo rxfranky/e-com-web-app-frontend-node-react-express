@@ -101,7 +101,7 @@ export default function ProductDetail() {
     return (
         <>
             <div className='min-h-screen w-screen flex justify-center items-center' id="parent">
-                <main className='h-[75vh] max-sm:h-fit w-[78vw] flex gap-9 max-sm:flex-col'>
+                <main className='h-[75vh] max-sm:h-fit w-[78vw] max-sm:w-fit flex gap-9 max-sm:flex-col'>
                     <div id="left">
                         <div id="image" className='w-[499px] max-sm:w-[335px] h-[499px] max-sm:h-[335px] bg-gray-100/70 flex justify-center items-center'>
                             <div className='h-105 max-sm:h-70 w-75 max-sm:w-[220px]'>

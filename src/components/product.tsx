@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from 'motion/react'
 import type { JSX } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { addToCart, checkout, deleteProduct } from "../utils/http-requests";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { addToCart, checkout, deleteProduct, addToWishlist, isInWishlist } from "../utils/http-requests";
 import Error from "../pages/error";
-import Modal from "../components/modal"
+import Modal from "../components/modal";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router";
-import { useLocation } from "react-router";
-import { useEffect } from "react";
-import { Spinner } from '@/components/ui/spinner'
+import { useNavigate, useLocation } from "react-router";
+import { Spinner } from '@/components/ui/spinner';
+import redHeartIcon from '@/assets/icons8-heart-pink.png'
+import grayHeartIcon from '@/assets/icons8-heart-gray.png'
+import { useSelector } from "react-redux";
+import { authClient } from "@/utils/auth-client";
+
 
 interface Props {
     imageSrc: string;
@@ -22,6 +25,12 @@ interface Props {
     forProductsPage?: boolean;
     initial?: { x?: number; y?: number };
     animate?: { x?: number; y?: number }
+}
+
+type queryRes = {
+    data: { inWishlist?: boolean; msg?: string } | undefined;
+    isError: boolean;
+    error: any
 }
 
 interface mutationRes {
@@ -37,6 +46,15 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const [showbtn, setShowBtn] = useState(false)
+
+    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
+    const oAuthData = authClient.useSession().data
+
+    const { data: wData, isError: wgIsError, error: wgError }: queryRes = useQuery({
+        queryFn: () => isInWishlist(id, isLoggedIn, oAuthData),
+        queryKey: ['get-wishlist', id]
+    })
+    const [inWishlistState, setInWishlistState] = useState<boolean | undefined>(wData?.inWishlist)
 
     const { mutate, data, error, isError, isPending }: mutationRes = useMutation(
         {
@@ -77,18 +95,55 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
         }
     )
 
+    const { mutate: wMutate, isError: wIsError, error: wError }: mutationRes = useMutation({
+        mutationFn: addToWishlist,
+        mutationKey: ['wishlist'],
+        onSuccess: (data: { removed?: boolean, added?: boolean }) => {
+            if (data?.added) {
+                setInWishlistState(true)
+            }
+            if (data?.removed) {
+                setInWishlistState(false)
+            }
+        }
+    })
+
     useEffect(() => {
         if (pathname === '/products') {
             setShowDialog(false)
         }
-    }, [pathname])
+        if (wData?.inWishlist) {
+            setInWishlistState(true)
+        }
+    }, [pathname, wData])
 
-    if (isError || bIsError || dIsError) {
-        return <Error StatusCode={isError ? error.statusCode : dIsError ? dError.statusCode : bError.statusCode} msg={isError ? error.message : dIsError ? dError.message : bError.message} />
+    if (isError || bIsError || dIsError || wIsError || wgIsError) {
+        return (
+            <Error
+                StatusCode={
+                    isError ? error.statusCode :
+                        dIsError ? dError.statusCode :
+                            wIsError ? wError.statusCode :
+                                wgIsError ? wgError.statusCode :
+                                    bError.statusCode
+                }
+                msg={
+                    isError ? error.message :
+                        dIsError ? dError.message :
+                            wIsError ? wError.message :
+                                wgIsError ? wgError.message :
+                                    bError.message
+                }
+            />
+        )
+    }
+
+    function handleAddtoWishlist(action: string) {
+        wMutate({ id, action })
     }
 
     function handleAddToCart() {
-        mutate({id})
+        mutate({ id })
     }
 
     function handleBuy() {
@@ -119,11 +174,15 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
                 transition={{ duration: 0.5 }}
             >
                 <div className={`h-44 ${forProductsPage && "h-65"} bg-gray-100 flex items-center justify-center relative max-sm:h-71`}>
-                    <motion.img
+                    <img
                         src={imageSrc}
                         alt={`image of ${title}`}
                         className={`h-36 object-cover w-28 ${forProductsPage && "h-55 w-45"} max-sm:w-55 max-sm:h-63`}
                     />
+
+                    <div onClick={() => handleAddtoWishlist(inWishlistState ? 'remove' : 'add')} className={`p-px rounded-sm bg-white cursor-pointer absolute ${forProductsPage ? 'h-6 w-6 top-2 right-2' : 'h-5 w-5 top-1 right-1'}`}>
+                        <img className="" src={inWishlistState ? redHeartIcon : grayHeartIcon} alt="heart icon" />
+                    </div>
 
                     <AnimatePresence>
                         {showbtn && <motion.span

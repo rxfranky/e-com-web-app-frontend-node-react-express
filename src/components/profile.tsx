@@ -154,6 +154,18 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                             Admin Products
                         </motion.p>
                     </NavLink>
+                    <NavLink
+                        to={'wishlist?page=1'}
+                    >
+                        <motion.p
+
+                            className="py-1 pl-5.5 hover:bg-gray-300/10"
+                            whileTap={{ backgroundColor: '#d1d5dc30' }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            Wishlist
+                        </motion.p>
+                    </NavLink>
                     <div className="flex justify-center">
                         <div id="partition" className="w-65 h-[0.5px] bg-gray-300 mt-2">
                         </div>

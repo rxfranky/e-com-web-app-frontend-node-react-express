@@ -13,6 +13,7 @@ import Error from './pages/error'
 import NewPassword from './pages/new-password'
 import Auth from './pages/auth'
 import ProductDetail from './pages/product-detail'
+import Wishlist from './pages/wishlist'
 
 
 export const router = createBrowserRouter([
@@ -94,6 +95,11 @@ export const router = createBrowserRouter([
         path: 'adminProducts',
         errorElement: <Error />,
         element: <AdminProducts />
+      },
+      {
+        path: 'wishlist',
+        errorElement: <Error />,
+        element: <Wishlist />
       }
     ]
   },
