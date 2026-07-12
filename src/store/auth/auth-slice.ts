@@ -1,11 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAuthState } from "../../utils/http-requests";
 
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        authState: localStorage.getItem('authToken') ? await getAuthState() : { isLoggedIn: false }
+        authState: localStorage.getItem('authToken') ? {
+            isLoading: true,
+            isLoggedIn: false,
+            userData: {
+                name: null,
+                email: null
+            },
+            msg: null
+        } : {
+            isLoading: false,
+            isLoggedIn: false,
+            userData: {
+                name: null,
+                email: null
+            },
+            msg: null
+        }
     },
     reducers: {
         login: (state, action) => {
@@ -14,14 +29,27 @@ const authSlice = createSlice({
                     name: action.payload.name,
                     email: action.payload.email
                 },
-                isLoggedIn: true
+                isLoggedIn: true,
+                isLoading: false,
+                msg: null
             }
         },
         logout(state) {
-            state.authState = { isLoggedIn: false }
+            state.authState = {
+                isLoggedIn: false,
+                userData: {
+                    name: null,
+                    email: null
+                },
+                isLoading: false,
+                msg: null
+            }
+        },
+        authStateAction: (state, action) => {
+            state.authState = { ...action.payload, isLoading: false }
         }
     }
 })
 
-export const { login, logout } = authSlice.actions
+export const { login, logout, authStateAction } = authSlice.actions
 export default authSlice.reducer

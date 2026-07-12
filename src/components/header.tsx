@@ -32,6 +32,7 @@ type mutationRes = {
 
 export default function Header() {
     const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
+    const isAuthLoading = useSelector((state: any) => state.authStateChanger.authState.isLoading)
     const show = useSelector((state: any) => state.showStateChanger)
     const dispatch = useDispatch()
     const { data } = authClient.useSession()
@@ -170,7 +171,7 @@ export default function Header() {
                                         >
                                             <img src={data.user.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
                                         </div>) : <ProfileIcon handleShowProfile={handleShowProfile} color='rgb(14, 52, 90)' />
-                                    ) : (
+                                    ) : isAuthLoading ? 'Loading...' : (
                                         <NavLink
                                             to={'auth'}
                                             className={({ isActive }) => isActive ? 'underline' : ''}
