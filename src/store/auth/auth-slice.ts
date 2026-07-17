@@ -4,46 +4,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        authState: localStorage.getItem('authToken') ? {
-            isLoading: true,
-            isLoggedIn: false,
-            userData: {
-                name: null,
-                email: null
-            },
-            msg: null
-        } : {
-            isLoading: false,
-            isLoggedIn: false,
-            userData: {
-                name: null,
-                email: null
-            },
-            msg: null
-        }
+        authState: { isLoading: true }
     },
     reducers: {
         login: (state, action) => {
-            state.authState = {
-                userData: {
-                    name: action.payload.name,
-                    email: action.payload.email
-                },
-                isLoggedIn: true,
-                isLoading: false,
-                msg: null
-            }
+            state.authState = { ...action.payload, isLoading: false }
         },
-        logout(state) {
-            state.authState = {
-                isLoggedIn: false,
-                userData: {
-                    name: null,
-                    email: null
-                },
-                isLoading: false,
-                msg: null
-            }
+        logout(state, action) {
+            state.authState = { ...action.payload, isLoading: false }
         },
         authStateAction: (state, action) => {
             state.authState = { ...action.payload, isLoading: false }

@@ -30,6 +30,7 @@ export default function Auth(): JSX.Element {
     const [formState, formAction, isFormSubmitting] = useActionState(handleFormSubmit, null)
     const { pathname } = useLocation()
     const show = useSelector((state: any) => state.showStateChanger)
+    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
     const dispatch = useDispatch()
 
     const { mutate: lMutate,
@@ -48,8 +49,7 @@ export default function Auth(): JSX.Element {
                 setShowDialogState(true)
             }
         }
-    }
-    )
+    })
 
     const { mutate,
         isError,
@@ -75,7 +75,7 @@ export default function Auth(): JSX.Element {
         }
         if (lData && lData.authToken) {
             localStorage.setItem('authToken', lData.authToken)
-            dispatch(loginAction(lData))
+            dispatch(loginAction({ userData: { name: lData.name, email: lData.email }, isLoggedIn: true }))
         }
         if (show.showHamberger) {
             dispatch(handleShowHambergerAction(false))
@@ -84,7 +84,7 @@ export default function Auth(): JSX.Element {
 
     function handleFormSubmit(prevState: any, formData: any) {
         const formDataObj = Object.fromEntries(formData)
-        isSignupMode ? mutate(formDataObj) : lMutate(formDataObj)
+        isSignupMode ? mutate(formDataObj) : lMutate({ ...formDataObj, oAuthToken })
     }
 
     if (isError || lIsError) {
@@ -111,7 +111,7 @@ export default function Auth(): JSX.Element {
             <div className="min-h-screen min-w-screen">
                 <motion.div
                     id="parent"
-                    className="w-[65vw] max-sm:w-[72vw] h-[70vh] flex m-auto mt-9 shadow-2xl rounded-xl max-sm:flex-col max-sm:items-center"
+                    className="w-[65vw] max-sm:w-[72vw] h-[70vh] max-sm:h-fit flex m-auto mt-9 shadow-2xl rounded-xl max-sm:flex-col max-sm:items-center"
                 >
                     <motion.div
                         id="LEFT or TOP"
@@ -134,7 +134,7 @@ export default function Auth(): JSX.Element {
                         <p className="tracking-wide font-light text-center w-60 max-sm:w-60">
                             {!isSignupMode ? "Enter your personal details and start journey with us" : "To keep connected with us please login with your personal info"}
                         </p>
-                        <button onClick={() => setIsSignupMode(prev => !prev)} className="border border-white px-16 max-sm:px-8 py-3 max-sm:py-2 rounded-full tracking-wide cursor-pointer">{!isSignupMode ? "SIGN UP" : "SIGN IN"}</button>
+                        <button onClick={() => setIsSignupMode(prev => !prev)} className="border border-white px-16 max-sm:px-8 py-3 max-sm:py-2 max-sm:mb-2 rounded-full tracking-wide cursor-pointer">{!isSignupMode ? "SIGN UP" : "SIGN IN"}</button>
                     </motion.div>
 
                     <motion.div
@@ -201,7 +201,7 @@ export default function Auth(): JSX.Element {
                                         </div>
                                     </NavLink>
                                 )}
-                                <motion.button layout className="py-3.5 max-sm:py-2.5 px-16 max-sm:px-8 cursor-pointer tracking-wide rounded-full bg-bStoreCol text-white">
+                                <motion.button layout className="py-3.5 max-sm:py-2.5 px-16 max-sm:px-8 cursor-pointer tracking-wide max-sm:mb-2 rounded-full bg-bStoreCol text-white">
                                     {isPending ? "Signing up..." : lIsPending ? 'Logging in...' : isFormSubmitting ? 'Submitting...' : !isSignupMode ? "SIGN IN" : "SIGN UP"}
                                 </motion.button>
                             </form>

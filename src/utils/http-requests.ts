@@ -1,6 +1,3 @@
-import { getoAuthToken } from "./auth-client"
-
-
 export async function signup(userData: any) {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
         method: 'POST',
@@ -27,7 +24,7 @@ export async function login(loginData: any) {
         headers: {
             'Content-Type': 'application/json',
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + loginData.oAuthToken
         }
     })
     const data = await response.json()
@@ -104,7 +101,7 @@ export async function addProduct(data: any) {
         body: data.formData,
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + data.oAuthToken
         }
     })
     const resData = await response.json()
@@ -116,14 +113,13 @@ export async function addProduct(data: any) {
     return resData;
 }
 
-export async function fetchProducts(signal: any, queryParam?: string, isAdmin?: boolean) {
+export async function fetchProducts(signal: any, data: { isAdmin: boolean; page: string | boolean; oAuthToken: string | undefined }) {
     const authToken: string | null = localStorage.getItem('authToken');
-
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${queryParam ?? null}&isAdmin=${isAdmin ?? false}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${data.page}&isAdmin=${data.isAdmin}`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + data.oAuthToken
         }
     })
     const resData = await response.json()
@@ -135,13 +131,13 @@ export async function fetchProducts(signal: any, queryParam?: string, isAdmin?: 
     return resData
 }
 
-export async function addToCart({ id, quantity }: { id: number; quantity?: number }) {
+export async function addToCart({ id, quantity, oAuthToken }: { id: number; quantity?: number, oAuthToken: string | undefined }) {
     const authToken: string | null = localStorage.getItem('authToken')
 
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/addToCart/${id}/?quantity=${quantity ?? null}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/addToCart/${id}/?quantity=${quantity}`, {
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const resData = await response.json()
@@ -154,13 +150,12 @@ export async function addToCart({ id, quantity }: { id: number; quantity?: numbe
 }
 
 
-export async function fetchCart({ signal }: { signal: any }) {
+export async function fetchCart(oAuthToken: string | undefined) {
     const authToken = localStorage.getItem('authToken')
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/fetchCart`, {
-        signal,
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const data = await response.json()
@@ -193,7 +188,7 @@ export async function checkout(data: any) {
         headers: {
             "Content-Type": 'application/json',
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + data.oAuthToken
         }
     })
     const resData = await response.json()
@@ -206,13 +201,12 @@ export async function checkout(data: any) {
 }
 
 
-export async function fetchOrders({ signal }: { signal: any }) {
+export async function fetchOrders(oAuthToken: string | undefined) {
     const authToken: string | null = localStorage.getItem('authToken')
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/fetchOrders`, {
-        signal,
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const data = await response.json()
@@ -224,13 +218,13 @@ export async function fetchOrders({ signal }: { signal: any }) {
     return data
 }
 
-export async function deleteProduct(id: number) {
+export async function deleteProduct({ id, oAuthToken }: { id: number; oAuthToken: string | undefined }) {
     const authToken: string | null = localStorage.getItem('authToken')
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/deleteProduct/${id}`, {
         method: 'DELETE',
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const data = await response.json()
@@ -316,13 +310,13 @@ export async function getSearchedProduct(formData: { search?: string }) {
 }
 
 
-export async function addToWishlist({ id, action }: { id: number, action: string }) {
+export async function addToWishlist({ id, action, oAuthToken }: { id: number; action: string; oAuthToken: string | undefined }) {
     const authToken: string | null = localStorage.getItem('authToken')
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/addToWishlist/${id}/?action=${action}`, {
         method: 'POST',
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const data = await response.json()
@@ -337,8 +331,8 @@ export async function addToWishlist({ id, action }: { id: number, action: string
 }
 
 
-export async function isInWishlist(id: number, isLoggedIn: boolean, oAuthData: any) {
-    if (!isLoggedIn && !oAuthData) {
+export async function isInWishlist(id: number, isLoggedIn: boolean, oAuthToken: string | undefined) {
+    if (!isLoggedIn) {
         return { isLoggedIn: false }
     }
     const authToken: null | string = localStorage.getItem('authToken')
@@ -346,7 +340,7 @@ export async function isInWishlist(id: number, isLoggedIn: boolean, oAuthData: a
         method: 'GET',
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const data = await response.json();
@@ -361,13 +355,13 @@ export async function isInWishlist(id: number, isLoggedIn: boolean, oAuthData: a
 }
 
 
-export async function getWishlist(page: string) {
+export async function getWishlist(page: string, oAuthToken: string | undefined) {
     const authToken: null | string = localStorage.getItem('authToken')
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/getWishlist?page=${page}`, {
         method: 'GET',
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + await getoAuthToken()
+            oAuthToken: 'Bearer ' + oAuthToken
         }
     })
     const data = await response.json()

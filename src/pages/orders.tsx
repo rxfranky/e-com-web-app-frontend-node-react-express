@@ -20,7 +20,7 @@ interface queRes {
 
 export default function Orders(): JSX.Element {
     const show = useSelector((state: any) => state.showStateChanger)
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -32,8 +32,8 @@ export default function Orders(): JSX.Element {
 
     const { data, isPending, error, isError }: queRes = useQuery(
         {
-            queryFn: fetchOrders,
-            queryKey: ['fetch-orders', isLoggedIn]
+            queryFn: () => fetchOrders(authState.oAuthToken),
+            queryKey: ['fetch-orders', authState.isLoggedIn]
         }
     )
 

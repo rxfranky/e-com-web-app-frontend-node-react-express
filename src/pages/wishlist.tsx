@@ -21,6 +21,7 @@ type queRes = {
 export default function Wishlist(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams()
     const show = useSelector((state: any) => state.showStateChanger)
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -32,7 +33,7 @@ export default function Wishlist(): JSX.Element {
 
     const { data, error, isPending, isError }: queRes = useQuery(
         {
-            queryFn: ({ signal, queryKey }) => { return getWishlist(queryKey[0]) },
+            queryFn: ({ signal, queryKey }) => { return getWishlist(queryKey[0], authState.oAuthToken) },
             queryKey: [searchParams.get('page')!]
         }
     )
@@ -41,7 +42,8 @@ export default function Wishlist(): JSX.Element {
         <>
             <div id="parent" className="mt-10">
                 <section id="txt">
-                    <p className="text-5xl max-sm:text-4xl tracking-wider text-bStoreCol text-center font-bold">WISHLIST</p>
+                    <p className="text-2xl text-bStoreCol mb-3 text-center font-semibold">Your</p>
+                    <p className="text-5xl max-sm:text-4xl tracking-wider text-bStoreCol text-center font-bold">Wishlist</p>
                 </section>
                 <section id="main" className="mt-12">
                     <span className="text-2xl font-semibold ml-33 max-sm:ml-5 text-bStoreCol">All Products</span>

@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { addToCart } from '../utils/http-requests'
 import { createPortal } from "react-dom";
 import Modal from '@/components/modal'
+import { useSelector } from 'react-redux'
 
 
 type mutationRes = {
@@ -27,6 +28,7 @@ export default function ProductDetail() {
     const [showRRP, setShowRRP] = useState<boolean>(false)
     const [showShippingInfo, setShowShippingInfo] = useState<boolean>(false)
     const [showDialog, setShowDialog] = useState<boolean>(false)
+    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
 
     const { mutate: mMutate, isError: mIsError, error: mError, isPending: mIsPending }: mutationRes = useMutation(
         {
@@ -42,7 +44,7 @@ export default function ProductDetail() {
     )
 
     function handleBuy() {
-        mMutate({ data: { productId, quantity, price: searchParams.get('price') } })
+        mMutate({ data: { productId, quantity, price: searchParams.get('price') }, oAuthToken })
     }
 
     const { mutate, data, error, isError, isPending }: mutationRes = useMutation(
@@ -61,7 +63,7 @@ export default function ProductDetail() {
     )
 
     function handleAddToCart() {
-        mutate({ id: productId, quantity })
+        mutate({ id: productId, quantity, oAuthToken })
     }
 
     function handleShow(action: string) {

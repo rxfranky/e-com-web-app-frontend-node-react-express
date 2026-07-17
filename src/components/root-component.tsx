@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authStateAction } from "@/store/auth/auth-slice";
+import { authClient } from "@/utils/auth-client";
 
 
 export default function RootComponent() {
@@ -14,12 +15,19 @@ export default function RootComponent() {
         queryKey: ['get-authState']
     })
     const dispatch = useDispatch()
+    const { data: oAuthData, isPending: oIsPending } = authClient.useSession()
 
     useEffect(() => {
-        if (localStorage.getItem('authToken') && data) {
+        if (oAuthData) {
+            dispatch(authStateAction({ userData: { name: oAuthData?.user.name, email: oAuthData?.user.email, image: oAuthData?.user.image }, isLoggedIn: true, oAuth: true, oAuthToken: oAuthData.session.token }))
+        }
+        if (data && data.isLoggedIn) {
             dispatch(authStateAction(data))
         }
-    }, [data])
+        if (!data?.isLoggedIn && !oAuthData && !oIsPending) {
+            dispatch(authStateAction(data))
+        }
+    }, [oAuthData, data])
 
     return (
         <>

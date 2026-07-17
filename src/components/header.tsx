@@ -31,11 +31,9 @@ type mutationRes = {
 
 
 export default function Header() {
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
-    const isAuthLoading = useSelector((state: any) => state.authStateChanger.authState.isLoading)
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
     const show = useSelector((state: any) => state.showStateChanger)
     const dispatch = useDispatch()
-    const { data } = authClient.useSession()
     const [showSearchInp, setShowSearchInp] = useState<boolean>(false)
     const [formState, formAction, isFormSubmitting] = useActionState(handleFormSubmit, null)
     const [showSearchContent, setShowSearchedContent] = useState<boolean>(false)
@@ -164,14 +162,14 @@ export default function Header() {
                             <li className="text-bStoreCol text-lg">Contact</li>
                             <div className="flex items-center">
                                 <li className='text-bStoreCol w-[111.26px] flex justify-center'>
-                                    {(isLoggedIn || data) ? (
-                                        data?.user.image ? (<div
+                                    {(authState.isLoggedIn) ? (
+                                        authState.userData.image ? (<div
                                             className='size-6.5 rounded-full cursor-pointer'
                                             onClick={() => handleShowProfile(true)}
                                         >
-                                            <img src={data.user.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
+                                            <img src={authState.userData.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
                                         </div>) : <ProfileIcon handleShowProfile={handleShowProfile} color='rgb(14, 52, 90)' />
-                                    ) : isAuthLoading ? 'Loading...' : (
+                                    ) : authState.isLoading ? 'Loading...' : (
                                         <NavLink
                                             to={'auth'}
                                             className={({ isActive }) => isActive ? 'underline' : ''}
@@ -223,10 +221,8 @@ export default function Header() {
                             {show.showHamberger && (
                                 createPortal(
                                     <Hamberger
-                                        isLoggedIn={isLoggedIn}
                                         onClose={handleShowHamberger}
                                         handleShowProfile={handleShowProfile}
-                                        oAuthData={data}
                                     />,
                                     document.getElementById('modal')!
                                 )
@@ -235,7 +231,7 @@ export default function Header() {
                     }
                 </nav>
             </header>
-            {(show.showProfile && (isLoggedIn || data)) && (
+            {(show.showProfile && authState.isLoggedIn) && (
                 createPortal(
                     <div id="overlay" onClick={() => handleShowProfile(false)} className="h-screen w-screen bg-black/25 max-sm:absolute cursor-pointer max-sm:top-0">
                         <Profile onClose={handleShowProfile} />

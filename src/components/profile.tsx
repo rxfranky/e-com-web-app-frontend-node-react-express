@@ -20,7 +20,6 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
     const authState = useSelector((state: any) => state.authStateChanger.authState)
     const [showCart, setShowCart] = useState<boolean>(false)
     const dispatch = useDispatch()
-    const { data } = authClient.useSession()
 
     const { mutate,
         isError,
@@ -32,7 +31,7 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
         onSuccess: (data: { logoutSuccess?: boolean; isLoggedIn?: boolean }) => {
             if (data.logoutSuccess) {
                 localStorage.removeItem('authToken')
-                dispatch(logoutAction())
+                dispatch(logoutAction({ isLoggedIn: false }))
                 dispatch(handleShowProfileAction(false))
             }
         }
@@ -40,8 +39,10 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
 
 
     async function logout() {
-        if (data) {
+        if (authState.oAuth) {
             await authClient.signOut()
+            dispatch(logoutAction({ isLoggedIn: false }))
+            dispatch(handleShowProfileAction(false))
         } else {
             mutate(localStorage.getItem('authToken'))
         }
@@ -88,17 +89,17 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                     <div className="w-65">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-1.5">
-                                {data?.user.image ? (<div
+                                {authState.userData.image ? (<div
                                     className='size-6.5 rounded-full cursor-pointer'
                                 >
-                                    <img src={data.user.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
+                                    <img src={authState.userData.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
                                 </div>) : <ProfileIcon color="white" />}
                                 <div className="flex flex-col">
                                     <span className="text-lg font-semibold">
-                                        {authState.userData?.name || data?.user.name || authState.msg}
+                                        {authState.userData?.name || authState.msg}
                                     </span>
                                     <span className="text-sm text-gray-300/60">
-                                        {authState.userData?.email || data?.user.email || authState.msg}
+                                        {authState.userData?.email || authState.msg}
                                     </span>
                                 </div>
                             </div>

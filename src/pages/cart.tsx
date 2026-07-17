@@ -24,12 +24,12 @@ type mutationRes = {
 }
 
 export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element {
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
 
     const { data, error, isError, isPending }: queRes = useQuery(
         {
-            queryFn: fetchCart,
-            queryKey: ['fetch-cart', isLoggedIn]
+            queryFn: () => fetchCart(authState.oAuthToken),
+            queryKey: ['fetch-cart', authState.isLoggedIn]
         }
     )
 
@@ -66,7 +66,7 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
     }
 
     function handleCheckout() {
-        mutate({ cart: data.cart })
+        mutate({ cart: data.cart, oAuthToken: authState.oAuthToken })
     }
 
     return (

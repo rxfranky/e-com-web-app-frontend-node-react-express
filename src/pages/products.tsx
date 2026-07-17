@@ -20,6 +20,7 @@ type queRes = {
 export default function Products(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams()
     const show = useSelector((state: any) => state.showStateChanger)
+    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export default function Products(): JSX.Element {
 
     const { data, error, isPending, isError }: queRes = useQuery(
         {
-            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, queryKey[0]) },
+            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, { page: queryKey[0], isAdmin: false, oAuthToken }) },
             queryKey: [searchParams.get('page')!]
         }
     )

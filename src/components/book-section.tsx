@@ -21,7 +21,7 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
 
     const { data, isError, isPending, error }: queryRes = useQuery(
         {
-            queryFn: ({ signal }) => fetchProducts(signal),
+            queryFn: ({ signal }) => fetchProducts(signal, { page: false, isAdmin: false, oAuthToken: undefined }),
             queryKey: ['fetch-products']
         }
     )

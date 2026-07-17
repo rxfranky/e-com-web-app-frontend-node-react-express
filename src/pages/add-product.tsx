@@ -30,6 +30,7 @@ export default function AddProduct(): JSX.Element {
     const navigate = useNavigate()
     const { pathname } = useLocation()
     const show = useSelector((state: any) => state.showStateChanger)
+    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -68,9 +69,9 @@ export default function AddProduct(): JSX.Element {
     function handleFormSubmit(prevState: any, formData: FormData) {
         // const dataObj = Object.fromEntries(formData) // lose actual file data
         if (product_id) {
-            mutate({ formData, product_id })
+            mutate({ formData, product_id, oAuthToken })
         } else {
-            mutate({ formData })
+            mutate({ ...formData, oAuthToken })
         }
     }
 

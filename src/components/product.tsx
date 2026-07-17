@@ -11,7 +11,6 @@ import { Spinner } from '@/components/ui/spinner';
 import redHeartIcon from '@/assets/icons8-heart-pink.png'
 import grayHeartIcon from '@/assets/icons8-heart-gray.png'
 import { useSelector } from "react-redux";
-import { authClient } from "@/utils/auth-client";
 
 
 interface Props {
@@ -47,11 +46,10 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
     const navigate = useNavigate()
     const [showbtn, setShowBtn] = useState(false)
 
-    const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
-    const oAuthData = authClient.useSession().data
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
 
     const { data: wData, isError: wgIsError, error: wgError }: queryRes = useQuery({
-        queryFn: () => isInWishlist(id, isLoggedIn, oAuthData),
+        queryFn: () => isInWishlist(id, authState.isLoggedIn, authState.oAuthToken),
         queryKey: ['get-wishlist', id]
     })
     const [inWishlistState, setInWishlistState] = useState<boolean | undefined>(wData?.inWishlist)
@@ -139,15 +137,15 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
     }
 
     function handleAddtoWishlist(action: string) {
-        wMutate({ id, action })
+        wMutate({ id, action, oAuthToken: authState.oAuthToken })
     }
 
     function handleAddToCart() {
-        mutate({ id })
+        mutate({ id, oAuthToken: authState.oAuthToken })
     }
 
     function handleBuy() {
-        bMutate({ product: { id, price } })
+        bMutate({ product: { id, price }, oAuthToken: authState.oAuthToken })
     }
 
     function handleEdit() {
@@ -155,7 +153,7 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
     }
 
     function handleDelete() {
-        dMutate(id)
+        dMutate({ id, oAuthToken: authState.oAuthToken })
     }
 
     function handleShowDatailBtn() {

@@ -2,21 +2,19 @@ import { useEffect } from "react";
 import { motion } from 'motion/react'
 import { NavLink } from "react-router"
 import ProfileIcon from "./profile-icon";
+import { useSelector } from "react-redux";
 
 
 export default function Hamberger(
     {
-        isLoggedIn,
         onClose,
         handleShowProfile,
-        oAuthData
     }: {
-        isLoggedIn: boolean;
         onClose: (action: boolean) => void;
         handleShowProfile: (action: boolean) => void;
-        oAuthData: any
     }
 ) {
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
 
     useEffect(() => {
         document.body.classList.add("overflow-hidden")
@@ -38,12 +36,12 @@ export default function Hamberger(
                 <div className="flex justify-center">
                     <div className="flex justify-between w-67.5 items-center mt-12">
                         <div className="flex items-center gap-2 text-lg text-bStoreCol">
-                            {(isLoggedIn || oAuthData) ? (oAuthData?.user.image ? (<div
+                            {authState.isLoggedIn ? (authState.userData.image ? (<div
                                 className='size-6.5 rounded-full cursor-pointer'
                                 onClick={() => handleShowProfile(true)}
                             >
-                                <img src={oAuthData.user.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
-                            </div>) : <ProfileIcon
+                                <img src={authState.userData.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
+                            </div>) : authState.isLoading ? 'Loading...' : <ProfileIcon
                                 handleShowProfile={handleShowProfile}
                                 color="rgb(14, 52, 90)"
                             />

@@ -23,6 +23,7 @@ export default function AdminProducts(): JSX.Element {
     const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
     const dispatch = useDispatch()
     const show = useSelector((state: any) => state.showStateChanger)
+    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
 
     useEffect(() => {
         if (show.showHamberger) {
@@ -33,7 +34,7 @@ export default function AdminProducts(): JSX.Element {
 
     const { data, error, isPending, isError }: queRes = useQuery(
         {
-            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, queryKey[0], true) },
+            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, { page: queryKey[0], isAdmin: true, oAuthToken }) },
             queryKey: [searchParams.get('page')!, isLoggedIn]
         }
     )
