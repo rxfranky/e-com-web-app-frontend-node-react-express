@@ -113,13 +113,13 @@ export async function addProduct(data: any) {
     return resData;
 }
 
-export async function fetchProducts(signal: any, data: { isAdmin: boolean; page: string | boolean; oAuthToken: string | undefined }) {
+export async function fetchProducts(signal: any, data?: { isAdmin: boolean; page: string | boolean; oAuthToken: string | undefined }) {
     const authToken: string | null = localStorage.getItem('authToken');
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${data.page}&isAdmin=${data.isAdmin}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${data?.page}&isAdmin=${data?.isAdmin}`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + data.oAuthToken
+            oAuthToken: 'Bearer ' + data?.oAuthToken
         }
     })
     const resData = await response.json()

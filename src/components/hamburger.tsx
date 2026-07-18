@@ -36,12 +36,12 @@ export default function Hamberger(
                 <div className="flex justify-center">
                     <div className="flex justify-between w-67.5 items-center mt-12">
                         <div className="flex items-center gap-2 text-lg text-bStoreCol">
-                            {authState.isLoggedIn ? (authState.userData.image ? (<div
+                            {authState.isLoading ? 'Loading...' : authState.isLoggedIn ? (authState.userData?.image ? (<div
                                 className='size-6.5 rounded-full cursor-pointer'
                                 onClick={() => handleShowProfile(true)}
                             >
                                 <img src={authState.userData.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
-                            </div>) : authState.isLoading ? 'Loading...' : <ProfileIcon
+                            </div>) : <ProfileIcon
                                 handleShowProfile={handleShowProfile}
                                 color="rgb(14, 52, 90)"
                             />

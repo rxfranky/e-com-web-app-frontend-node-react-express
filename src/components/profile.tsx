@@ -89,7 +89,7 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                     <div className="w-65">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-1.5">
-                                {authState.userData.image ? (<div
+                                {authState.userData?.image ? (<div
                                     className='size-6.5 rounded-full cursor-pointer'
                                 >
                                     <img src={authState.userData.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />

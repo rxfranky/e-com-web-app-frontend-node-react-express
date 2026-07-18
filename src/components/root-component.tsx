@@ -24,10 +24,10 @@ export default function RootComponent() {
         if (data && data.isLoggedIn) {
             dispatch(authStateAction(data))
         }
-        if (!data?.isLoggedIn && !oAuthData && !oIsPending) {
+        if (data?.isLoggedIn === false && !oAuthData && !oIsPending) {
             dispatch(authStateAction(data))
         }
-    }, [oAuthData, data])
+    }, [oAuthData, data, oIsPending])
 
     return (
         <>

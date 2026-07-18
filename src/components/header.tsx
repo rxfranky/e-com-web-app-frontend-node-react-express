@@ -162,26 +162,25 @@ export default function Header() {
                             <li className="text-bStoreCol text-lg">Contact</li>
                             <div className="flex items-center">
                                 <li className='text-bStoreCol w-[111.26px] flex justify-center'>
-                                    {(authState.isLoggedIn) ? (
-                                        authState.userData.image ? (<div
+                                    {authState.isLoading ? 'Loading...' : authState.isLoggedIn ? (
+                                        authState.userData?.image ? (<div
                                             className='size-6.5 rounded-full cursor-pointer'
                                             onClick={() => handleShowProfile(true)}
                                         >
                                             <img src={authState.userData.image} height={100} width={100} className='object-cover rounded-full' alt="profile pic" />
                                         </div>) : <ProfileIcon handleShowProfile={handleShowProfile} color='rgb(14, 52, 90)' />
-                                    ) : authState.isLoading ? 'Loading...' : (
-                                        <NavLink
-                                            to={'auth'}
-                                            className={({ isActive }) => isActive ? 'underline' : ''}
+                                    ) : (<NavLink
+                                        to={'auth'}
+                                        className={({ isActive }) => isActive ? 'underline' : ''}
+                                    >
+                                        <motion.span
+                                            className="text-bStoreCol text-nowrap"
+                                            whileTap={{ scale: 1 }}
+                                            whileHover={{ scale: 1.05 }}
                                         >
-                                            <motion.span
-                                                className="text-bStoreCol text-nowrap"
-                                                whileTap={{ scale: 1 }}
-                                                whileHover={{ scale: 1.05 }}
-                                            >
-                                                Signup or Login
-                                            </motion.span>
-                                        </NavLink>
+                                            Signup or Login
+                                        </motion.span>
+                                    </NavLink>
                                     )}
                                 </li>
                             </div>
