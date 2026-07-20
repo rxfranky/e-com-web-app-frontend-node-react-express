@@ -1,13 +1,12 @@
 import { createPortal } from 'react-dom'
 import Profile from './profile'
-import Hamberger from './hamburger'
+import Hamburger from './hamburger'
 import { motion } from 'motion/react'
 import { NavLink, useLocation } from "react-router"
 import { useSelector, useDispatch } from "react-redux"
 import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
 import { handleShowProfile as handleShowProfileAction } from '../store/show/show-slice'
 import ProfileIcon from './profile-icon'
-import { authClient } from '../utils/auth-client'
 import { SearchIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'motion/react'
@@ -212,31 +211,35 @@ export default function Header() {
                                     )}
                                 </AnimatePresence>
                                 <div onClick={() => handleShowHamberger(true)} id='hamburger' className='w-7.5 h-6.5 flex flex-col justify-between cursor-pointer'>
-                                    <p className='h-0.5 bg-bStoreCol'></p>
-                                    <p className='h-0.5 bg-bStoreCol'></p>
-                                    <p className='h-0.5 bg-bStoreCol'></p>
+                                    <motion.p animate={{ rotate: show.showHamberger ? -45 : 0, y: show.showHamberger ? 11.6 : 0 }} className='h-0.5 bg-bStoreCol'></motion.p>
+                                    <motion.p animate={{ opacity: show.showHamberger ? 0 : 1 }} className='h-0.5 bg-bStoreCol'></motion.p>
+                                    <motion.p animate={{ rotate: show.showHamberger ? 45 : 0, y: show.showHamberger ? -11.6 : 0 }} className='h-0.5 bg-bStoreCol'></motion.p>
                                 </div>
                             </div>
-                            {show.showHamberger && (
-                                createPortal(
-                                    <Hamberger
-                                        onClose={handleShowHamberger}
-                                        handleShowProfile={handleShowProfile}
-                                    />,
-                                    document.getElementById('modal')!
-                                )
+                            {createPortal(
+                                <AnimatePresence>
+                                    {show.showHamberger && (
+                                        <Hamburger
+                                            onClose={handleShowHamberger}
+                                            handleShowProfile={handleShowProfile}
+                                        />
+                                    )}
+                                </AnimatePresence>,
+                                document.getElementById('modal')!
                             )}
                         </>)
                     }
                 </nav>
             </header>
-            {(show.showProfile && authState.isLoggedIn) && (
-                createPortal(
-                    <div id="overlay" onClick={() => handleShowProfile(false)} className="h-screen w-screen bg-black/25 max-sm:absolute cursor-pointer max-sm:top-0">
-                        <Profile onClose={handleShowProfile} />
-                    </div>,
-                    document.getElementById('modal')!
-                )
+            {createPortal(
+                <AnimatePresence>
+                    {(show.showProfile && authState.isLoggedIn) && (
+                        <div id="overlay" onClick={() => handleShowProfile(false)} className="h-screen w-screen bg-black/25 max-sm:absolute cursor-pointer max-sm:top-0">
+                            <Profile onClose={handleShowProfile} />
+                        </div>
+                    )}
+                </AnimatePresence>,
+                document.getElementById('modal')!
             )}
             {(searchedData?.getProducts && showSearchContent) && (
                 createPortal((<div id="overlay" onClick={() => setShowSearchedContent(val => !val)} className='h-screen relative w-screen cursor-pointer'>

@@ -153,7 +153,7 @@ export default function ProductDetail() {
                             <div>
                                 <div onClick={() => handleShow('productInfo')} className='flex justify-between items-center cursor-pointer'>
                                     <span className='font-light'>PRODUCT INFO</span>
-                                    <span className='text-2xl font-extralight'>+</span>
+                                    <motion.span animate={{ rotate: showProductInfo ? 45 : 0 }} className='text-2xl font-extralight'>+</motion.span>
                                 </div>
                                 <AnimatePresence>
                                     {showProductInfo && (
@@ -172,7 +172,7 @@ export default function ProductDetail() {
                             <div>
                                 <div onClick={() => handleShow('RRP')} className='flex justify-between items-center cursor-pointer'>
                                     <span className='font-light'>RETURN & REFUND POLICY</span>
-                                    <span className='text-2xl font-extralight'>+</span>
+                                    <motion.span animate={{ rotate: showRRP ? 45 : 0 }} className='text-2xl font-extralight'>+</motion.span>
                                 </div>
                                 <AnimatePresence>
                                     {showRRP && (
@@ -191,7 +191,7 @@ export default function ProductDetail() {
                             <div>
                                 <div onClick={() => handleShow('shippingInfo')} className='flex justify-between items-center cursor-pointer'>
                                     <span className='font-light'>SHIPPING INFO</span>
-                                    <span className='text-2xl font-extralight'>+</span>
+                                    <motion.span animate={{ rotate: showShippingInfo ? 45 : 0 }} className='text-2xl font-extralight'>+</motion.span>
                                 </div>
                                 <AnimatePresence>
                                     {showShippingInfo && (

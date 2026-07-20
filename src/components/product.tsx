@@ -149,7 +149,7 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
     }
 
     function handleEdit() {
-        navigate(`/add-product?product_id=${id}&title=${title}&price=${price}`)
+        navigate(`/add-product?product_id=${id}&title=${title}&price=${price}&desc=${desc}`)
     }
 
     function handleDelete() {

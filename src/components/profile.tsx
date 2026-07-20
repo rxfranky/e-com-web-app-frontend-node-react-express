@@ -78,11 +78,12 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
         <>
             <motion.div
                 id="profile"
+                key='profile'
                 className="w-75 text-white h-[90vh] bg-bStoreCol absolute right-0 rounded-l-xl"
-                initial={{ x: 50 }}
-                animate={{ x: 0 }}
-                exit={{ x: 50 }}
-                transition={{ stiffness: 0, duration: 0.2 }}
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 50, opacity: 0 }}
+                transition={{ duration: 0.3, ease:'easeInOut' }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <section id="top" className="flex justify-center mt-4">

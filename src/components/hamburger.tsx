@@ -5,7 +5,7 @@ import ProfileIcon from "./profile-icon";
 import { useSelector } from "react-redux";
 
 
-export default function Hamberger(
+export default function Hamburger(
     {
         onClose,
         handleShowProfile,
@@ -26,12 +26,26 @@ export default function Hamberger(
     return (
         <>
             <motion.div
-                id='hamberger'
+                id='hamburger'
+                key='hamburger'
                 className='min-h-screen min-w-screen bg-white'
-                initial={{ x: 50 }}
-                animate={{ x: 0 }}
-                exit={{ x: 50 }}
-                transition={{ stiffness: 0, duration: 0.2 }}
+                initial={{
+                    rotateY: -90,
+                    opacity: 0,
+                    transformOrigin: "right center",
+                }}
+                animate={{
+                    rotateY: 0,
+                    opacity: 1,
+                }}
+                exit={{
+                    rotateY: -90,
+                    opacity: 0,
+                }}
+                transition={{
+                    duration: 0.4,
+                    ease: "easeInOut",
+                }}
             >
                 <div className="flex justify-center">
                     <div className="flex justify-between w-67.5 items-center mt-12">

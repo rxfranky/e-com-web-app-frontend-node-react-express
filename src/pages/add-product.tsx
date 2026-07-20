@@ -44,6 +44,7 @@ export default function AddProduct(): JSX.Element {
     const product_id = searchParams.get('product_id')
     const title = searchParams.get('title')
     const price = searchParams.get('price')
+    const desc = searchParams.get('desc')
 
     const { mutate, data, isError, error, isPending }: mutationRes = useMutation(
         {
@@ -84,7 +85,7 @@ export default function AddProduct(): JSX.Element {
             <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
                     <FormComponent value={title!} label="Title" name="title" />
-                    <FormComponent label="Description" name="description" />
+                    <FormComponent value={desc!} label="Description" name="description" />
                     <FormComponent value={price!} label="Price" name="price" />
                     <div>
                         <label className="block text-white mb-1" htmlFor="image">Choose Image</label>
