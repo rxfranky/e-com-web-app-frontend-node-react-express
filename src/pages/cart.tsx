@@ -74,10 +74,10 @@ export default function Cart({ onClose, }: { onClose: () => void }): JSX.Element
             <motion.div
                 id="cart"
                 className="w-96 h-[90vh] bg-white absolute right-0 rounded-l-xl"
-                initial={{ x: 50 }}
-                animate={{ x: 0 }}
-                exit={{ x: 50 }}
-                transition={{ stiffness: 0, duration: 0.2 }}
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 50, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-center my-5">

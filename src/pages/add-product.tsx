@@ -72,7 +72,7 @@ export default function AddProduct(): JSX.Element {
         if (product_id) {
             mutate({ formData, product_id, oAuthToken })
         } else {
-            mutate({ ...formData, oAuthToken })
+            mutate({ formData, oAuthToken })
         }
     }
 

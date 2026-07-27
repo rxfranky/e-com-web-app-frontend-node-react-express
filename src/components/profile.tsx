@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Cart from '../pages/cart'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { motion } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { NavLink } from "react-router";
 import { useDispatch } from 'react-redux'
 import { logout as logoutAction } from "../store/auth/auth-slice"
@@ -62,7 +62,9 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
             if (isBodyOverflowing) {
                 document.body.style.paddingRight = "";
             }
-            document.body.classList.remove("overflow-hidden")
+            if (window.outerWidth >= 640) {
+                document.body.classList.remove("overflow-hidden")
+            }
         }
     }, [])
 
@@ -83,7 +85,7 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 50, opacity: 0 }}
-                transition={{ duration: 0.3, ease:'easeInOut' }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <section id="top" className="flex justify-center mt-4">
@@ -203,13 +205,15 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                     </div>
                 </section>
             </motion.div>
-            {showCart && (
-                createPortal(
-                    <div id="overlay" onClick={(e) => { handleShowCart(); e.stopPropagation() }} className="h-screen cursor-pointer w-screen absolute top-0">
-                        <Cart onClose={handleShowCart} />
-                    </div>,
-                    document.getElementById('modal')!
-                )
+            {createPortal(
+                <AnimatePresence>
+                    {showCart && (
+                        <div id="overlay" onClick={(e) => { handleShowCart(); e.stopPropagation() }} className="h-screen cursor-pointer w-screen absolute top-0">
+                            <Cart onClose={handleShowCart} />
+                        </div>
+                    )}
+                </AnimatePresence>,
+                document.getElementById('modal')!
             )}
         </>
     )

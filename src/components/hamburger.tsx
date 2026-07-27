@@ -21,7 +21,7 @@ export default function Hamburger(
         return () => {
             document.body.classList.remove("overflow-hidden")
         }
-    })
+    }, [])
 
     return (
         <>

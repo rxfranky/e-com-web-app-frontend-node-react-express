@@ -144,7 +144,22 @@ export default function Auth(): JSX.Element {
                         transition={{ ease: 'easeInOut', duration: 0.6 }}
                     >
                         <div className="flex flex-col items-center">
-                            <h1 className="text-4xl max-sm:text-3xl font-extrabold text-bStoreCol tracking-wide">{!isSignupMode ? "Sign in to Store" : "Create Account"}</h1>
+                            <h1
+                                className="text-4xl max-sm:text-3xl font-extrabold text-bStoreCol tracking-wide"
+                            >
+                                <AnimatePresence mode="wait">
+                                    <motion.span
+                                        key={isSignupMode ? "signup" : "login"}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        {!isSignupMode ? "Sign in to Store" : "Create Account"}
+                                    </motion.span>
+                                </AnimatePresence>
+                            </h1>
+
                             <div id="logos" className="flex gap-2 my-5 max-sm:my-2.5">
                                 <div onClick={() => signIn('discord')} className="p-1.5 border border-black/30 rounded-full cursor-pointer">
                                     <img src={discordLogo} alt="discord" />

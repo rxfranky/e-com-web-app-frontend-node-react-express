@@ -22,8 +22,6 @@ interface Props {
     btnTitle_2?: string;
     id: number;
     forProductsPage?: boolean;
-    initial?: { x?: number; y?: number };
-    animate?: { x?: number; y?: number }
 }
 
 type queryRes = {
@@ -40,7 +38,7 @@ interface mutationRes {
     data?: any
 }
 
-export default function Product({ forProductsPage, imageSrc, title, desc, price, btnTitle_1, btnTitle_2, id, initial = { y: -30 }, animate = { y: 0 } }: Props): JSX.Element {
+export default function Product({ forProductsPage, imageSrc, title, desc, price, btnTitle_1, btnTitle_2, id }: Props): JSX.Element {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const { pathname } = useLocation()
     const navigate = useNavigate()
@@ -166,9 +164,9 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
                 id="product"
                 onMouseEnter={handleShowDatailBtn}
                 onMouseLeave={handleShowDatailBtn}
-                className={`w-42 h-73 ${forProductsPage && "w-65 h-94"} max-sm:w-69 max-sm:h-110`}
-                initial={{ ...initial, opacity: 0 }}
-                animate={{ ...animate, opacity: 1 }}
+                className={`w-42 h-73 ${forProductsPage && "w-65 h-94"} max-sm:w-69 max-sm:h-112`}
+                initial={{ y: -30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
             >
                 <div className={`h-44 ${forProductsPage && "h-65"} bg-gray-100 flex items-center justify-center relative max-sm:h-71`}>
