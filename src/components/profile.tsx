@@ -11,9 +11,10 @@ import { handleShowProfile as handleShowProfileAction } from "../store/show/show
 import ProfileIcon from "./profile-icon";
 import { authClient } from "../utils/auth-client";
 import { useMutation } from '@tanstack/react-query'
-import { logout as getLogout } from "../utils/http-requests";
+import { logout } from "../utils/http-requests";
 import type { UseMutationResult } from '@tanstack/react-query'
 import Error from "../pages/error";
+import { queryClient } from "@/main";
 
 
 export default function Profile({ onClose }: { onClose: (action: boolean) => void }) {
@@ -26,7 +27,7 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
         error,
         isPending
     }: UseMutationResult<any, any, any, any> = useMutation({
-        mutationFn: getLogout,
+        mutationFn: logout,
         mutationKey: ['logout'],
         onSuccess: (data: { logoutSuccess?: boolean; isLoggedIn?: boolean }) => {
             if (data.logoutSuccess) {
@@ -38,30 +39,32 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
     })
 
 
-    async function logout() {
+    async function handleLogout() {
         if (authState.oAuth) {
             await authClient.signOut()
             dispatch(logoutAction({ isLoggedIn: false }))
             dispatch(handleShowProfileAction(false))
+            queryClient.invalidateQueries({ queryKey: ['fetch-products', 'fetch-products-homepage'], refetchType: 'all' })
         } else {
             mutate(localStorage.getItem('authToken'))
+            queryClient.invalidateQueries({ queryKey: ['fetch-products', 'fetch-products-homepage'], refetchType: 'all' })
         }
     }
 
     useEffect(() => {
-        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-        const isBodyOverflowing = document.body.scrollHeight > window.innerHeight ||
-            document.body.scrollWidth > window.innerWidth;
+        // const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        // const isBodyOverflowing = document.body.scrollHeight > window.innerHeight ||
+        //     document.body.scrollWidth > window.innerWidth;
 
-        if (isBodyOverflowing) {
-            document.body.style.paddingRight = `${scrollbarWidth}px`;
-        }
+        //     if (isBodyOverflowing) {
+        //         document.body.style.paddingRight = `${scrollbarWidth}px`;
+        //     }
         document.body.classList.add("overflow-hidden")
 
         return () => {
-            if (isBodyOverflowing) {
-                document.body.style.paddingRight = "";
-            }
+            // if (isBodyOverflowing) {
+            //     document.body.style.paddingRight = "";
+            // }
             if (window.outerWidth >= 640) {
                 document.body.classList.remove("overflow-hidden")
             }
@@ -99,10 +102,10 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                                 </div>) : <ProfileIcon color="white" />}
                                 <div className="flex flex-col">
                                     <span className="text-lg font-semibold">
-                                        {authState.userData?.name || authState.msg}
+                                        {authState.userData?.name}
                                     </span>
                                     <span className="text-sm text-gray-300/60">
-                                        {authState.userData?.email || authState.msg}
+                                        {authState.userData?.email}
                                     </span>
                                 </div>
                             </div>
@@ -192,7 +195,7 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
                             Change Password</motion.p>
                     </NavLink>
                     <motion.p
-                        onClick={logout}
+                        onClick={handleLogout}
                         className="py-1 pl-5.5 hover:bg-gray-300/10 cursor-pointer"
                         whileTap={{ backgroundColor: '#d1d5dc30' }}
                         transition={{ duration: 0.4 }}

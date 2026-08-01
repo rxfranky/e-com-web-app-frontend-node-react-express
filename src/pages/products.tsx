@@ -20,7 +20,7 @@ type queRes = {
 export default function Products(): JSX.Element {
     const [searchParams, setSearchParams] = useSearchParams()
     const show = useSelector((state: any) => state.showStateChanger)
-    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -31,8 +31,9 @@ export default function Products(): JSX.Element {
 
     const { data, error, isPending, isError }: queRes = useQuery(
         {
-            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, { page: queryKey[0], isAdmin: false, oAuthToken }) },
-            queryKey: [searchParams.get('page')!]
+            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, { page: queryKey[0], oAuthToken: authState.oAuthToken }) },
+            queryKey: [searchParams.get('page')!, 'fetch-products'],
+            enabled: !authState.isLoading
         }
     )
 
@@ -49,7 +50,7 @@ export default function Products(): JSX.Element {
                     <div className="flex justify-center mt-8">
                         {data?.products.length === 0 ? (
                             <p className="text-4xl tracking-wide text-bStoreCol">Store is Empty</p>
-                        ) : isPending ? (
+                        ) : (isPending || authState.isLoading) ? (
                             <Spinner className="size-10 text-bStoreCol" />
                         ) : isError ? (
                             <Error StatusCode={error.statusCode} msg={error.message} />
@@ -68,12 +69,13 @@ export default function Products(): JSX.Element {
                                         title={product.title}
                                         desc={product.description}
                                         btnTitle_1='Add to Cart' btnTitle_2="Buy Now"
+                                        isInWishList={(!product.wishlist || product.wishlist?.length === 0) ? false : true}
                                     />
                                 ))}
                             </section>)
                         }
                     </div>
-                    {(data?.products.length !== 0 && !isPending && !isError) && (
+                    {(data?.products.length !== 0 && !isPending && !authState.isLoading && !isError) && (
                         <section id="pagination" className="flex justify-center items-center mt-6 text-bStoreCol">
                             <button
                                 disabled={searchParams.get('page') === '1'}

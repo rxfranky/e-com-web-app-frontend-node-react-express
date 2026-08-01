@@ -113,13 +113,13 @@ export async function addProduct(data: any) {
     return resData;
 }
 
-export async function fetchProducts(signal: any, data?: { isAdmin: boolean; page: string | boolean; oAuthToken: string | undefined }) {
+export async function fetchProducts(signal: any, data: { isAdmin?: boolean; page?: string | boolean; oAuthToken: string | undefined }) {
     const authToken: string | null = localStorage.getItem('authToken');
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${data?.page}&isAdmin=${data?.isAdmin}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/products?page=${data.page}&isAdmin=${data.isAdmin}`, {
         signal,
         headers: {
             authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + data?.oAuthToken
+            oAuthToken: 'Bearer ' + data.oAuthToken
         }
     })
     const resData = await response.json()
@@ -268,9 +268,11 @@ export async function getAuthState(): Promise<{ userData?: { name: string; email
 
     if (!response.ok) {
         const err = new Error(data.msg || 'res is not ok for getAuthState') as Error & {
-            statusCode: number
+            statusCode: number;
+            invalidToken: boolean
         }
         err.statusCode = response.status
+        err.invalidToken = data.invalidToken
         throw err;
     }
     return data;
@@ -322,30 +324,6 @@ export async function addToWishlist({ id, action, oAuthToken }: { id: number; ac
     const data = await response.json()
     if (!response.ok) {
         const err = new Error(data.msg || 'res is not ok for addToWishlist!') as Error & {
-            statusCode: number
-        }
-        err.statusCode = response.status;
-        throw err;
-    }
-    return data;
-}
-
-
-export async function isInWishlist(id: number, isLoggedIn: boolean, oAuthToken: string | undefined) {
-    if (!isLoggedIn) {
-        return { isLoggedIn: false }
-    }
-    const authToken: null | string = localStorage.getItem('authToken')
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/consumer/isInWishlist/${id}`, {
-        method: 'GET',
-        headers: {
-            authToken: 'Bearer ' + authToken,
-            oAuthToken: 'Bearer ' + oAuthToken
-        }
-    })
-    const data = await response.json();
-    if (!response.ok) {
-        const err = new Error(data.msg || 'res is not for isInWishlist!') as Error & {
             statusCode: number
         }
         err.statusCode = response.status;

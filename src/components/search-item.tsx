@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router"
+import * as React from 'react'
 
 type props = {
     id: number;
@@ -10,6 +11,22 @@ type props = {
 
 export default function SearchItem({ title, imageSrc, price, desc, id }: props) {
     const navigate = useNavigate()
+
+    React.useEffect(() => {
+        // const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        // const isBodyOverflowing = document.body.scrollHeight > window.innerHeight || document.body.scrollWidth > window.innerWidth;
+
+        // if (isBodyOverflowing) {
+        //     document.body.style.paddingRight = `${scrollbarWidth}px`;
+        // }
+        document.body.classList.add("overflow-hidden")
+        return () => {
+            // if (isBodyOverflowing) {
+            //     document.body.style.paddingRight = "";
+            // }
+            document.body.classList.remove("overflow-hidden")
+        }
+    }, [])
 
     return (
         <>

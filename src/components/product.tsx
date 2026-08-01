@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from 'motion/react'
 import type { JSX } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { addToCart, checkout, deleteProduct, addToWishlist, isInWishlist } from "../utils/http-requests";
+import { useMutation } from "@tanstack/react-query";
+import { addToCart, checkout, deleteProduct, addToWishlist } from "../utils/http-requests";
 import Error from "../pages/error";
 import Modal from "../components/modal";
 import { createPortal } from "react-dom";
@@ -22,12 +22,7 @@ interface Props {
     btnTitle_2?: string;
     id: number;
     forProductsPage?: boolean;
-}
-
-type queryRes = {
-    data: { inWishlist?: boolean; msg?: string } | undefined;
-    isError: boolean;
-    error: any
+    isInWishList?: boolean
 }
 
 interface mutationRes {
@@ -38,19 +33,14 @@ interface mutationRes {
     data?: any
 }
 
-export default function Product({ forProductsPage, imageSrc, title, desc, price, btnTitle_1, btnTitle_2, id }: Props): JSX.Element {
+export default function Product({ forProductsPage, imageSrc, title, desc, price, btnTitle_1, btnTitle_2, id, isInWishList }: Props): JSX.Element {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const [showbtn, setShowBtn] = useState(false)
-
     const authState = useSelector((state: any) => state.authStateChanger.authState)
 
-    const { data: wData, isError: wgIsError, error: wgError }: queryRes = useQuery({
-        queryFn: () => isInWishlist(id, authState.isLoggedIn, authState.oAuthToken),
-        queryKey: ['get-wishlist', id]
-    })
-    const [inWishlistState, setInWishlistState] = useState<boolean | undefined>(wData?.inWishlist)
+    const [inWishlistState, setInWishlistState] = useState<boolean | undefined>(isInWishList)
 
     const { mutate, data, error, isError, isPending }: mutationRes = useMutation(
         {
@@ -93,7 +83,7 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
 
     const { mutate: wMutate, isError: wIsError, error: wError }: mutationRes = useMutation({
         mutationFn: addToWishlist,
-        mutationKey: ['wishlist'],
+        mutationKey: ['post-wishlist'],
         onSuccess: (data: { removed?: boolean, added?: boolean }) => {
             if (data?.added) {
                 setInWishlistState(true)
@@ -108,27 +98,22 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
         if (pathname === '/products') {
             setShowDialog(false)
         }
-        if (wData?.inWishlist) {
-            setInWishlistState(true)
-        }
-    }, [pathname, wData])
+    }, [pathname])
 
-    if (isError || bIsError || dIsError || wIsError || wgIsError) {
+    if (isError || bIsError || dIsError || wIsError) {
         return (
             <Error
                 StatusCode={
                     isError ? error.statusCode :
                         dIsError ? dError.statusCode :
                             wIsError ? wError.statusCode :
-                                wgIsError ? wgError.statusCode :
-                                    bError.statusCode
+                                bError.statusCode
                 }
                 msg={
                     isError ? error.message :
                         dIsError ? dError.message :
                             wIsError ? wError.message :
-                                wgIsError ? wgError.message :
-                                    bError.message
+                                bError.message
                 }
             />
         )
@@ -176,7 +161,7 @@ export default function Product({ forProductsPage, imageSrc, title, desc, price,
                         className={`h-36 object-cover w-28 ${forProductsPage && "h-55 w-45"} max-sm:w-55 max-sm:h-63`}
                     />
 
-                    <div onClick={() => handleAddtoWishlist(inWishlistState ? 'remove' : 'add')} className={`p-px rounded-sm bg-white cursor-pointer absolute ${forProductsPage ? 'h-6 w-6 top-2 right-2' : 'h-5 w-5 top-1 right-1'}`}>
+                    <div onClick={() => handleAddtoWishlist(isInWishList ? 'remove' : 'add')} className={`p-px rounded-sm bg-white cursor-pointer absolute ${forProductsPage ? 'h-6 w-6 top-2 right-2' : 'h-5 w-5 top-1 right-1'}`}>
                         <img className="" src={inWishlistState ? redHeartIcon : grayHeartIcon} alt="heart icon" />
                     </div>
 

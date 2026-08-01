@@ -23,7 +23,7 @@ export default function AdminProducts(): JSX.Element {
     const isLoggedIn = useSelector((state: any) => state.authStateChanger.authState.isLoggedIn)
     const dispatch = useDispatch()
     const show = useSelector((state: any) => state.showStateChanger)
-    const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
 
     useEffect(() => {
         if (show.showHamberger) {
@@ -34,8 +34,9 @@ export default function AdminProducts(): JSX.Element {
 
     const { data, error, isPending, isError }: queRes = useQuery(
         {
-            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, { page: queryKey[0], isAdmin: true, oAuthToken }) },
-            queryKey: [searchParams.get('page')!, isLoggedIn]
+            queryFn: ({ signal, queryKey }) => { return fetchProducts(signal, { page: queryKey[0], isAdmin: true, oAuthToken: authState.oAuthToken }) },
+            queryKey: [searchParams.get('page')!, isLoggedIn],
+            enabled: !authState.isLoading
         }
     )
 
@@ -52,7 +53,7 @@ export default function AdminProducts(): JSX.Element {
                     <div className="flex justify-center mt-8">
                         {data?.products.length === 0 ? (
                             <p className="text-4xl tracking-wide text-bStoreCol">No products by You</p>
-                        ) : isPending ? (
+                        ) : (isPending || authState.isLoading) ? (
                             <Spinner className="size-10 text-bStoreCol" />
                         ) : isError ? (
                             <Error StatusCode={error.statusCode} msg={error.message} />
@@ -71,12 +72,13 @@ export default function AdminProducts(): JSX.Element {
                                         title={product.title}
                                         desc={product.description}
                                         btnTitle_1='Edit' btnTitle_2="Delete"
+                                        isInWishList={(!product.wishlist || product.wishlist?.length === 0) ? false : true}
                                     />
                                 ))}
                             </section>)
                         }
                     </div>
-                    {(data?.products.length !== 0 && !isPending && !isError) && (
+                    {(data?.products.length !== 0 && !isPending && !authState.isLoading && !isError) && (
                         <section id="pagination" className="flex justify-center items-center mt-6 text-bStoreCol">
                             <button
                                 disabled={searchParams.get('page') === '1'}

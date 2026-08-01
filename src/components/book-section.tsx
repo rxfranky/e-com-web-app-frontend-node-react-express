@@ -4,6 +4,7 @@ import { fetchProducts } from "../utils/http-requests"
 import Error from "../pages/error"
 import { Spinner } from "./ui/spinner"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { useSelector } from "react-redux"
 
 
 type queryRes = {
@@ -14,10 +15,13 @@ type queryRes = {
 }
 
 export default function BookSection({ atTop }: { atTop?: Boolean }) {
+    const authState = useSelector((state: any) => state.authStateChanger.authState)
+
     const { data, isError, isPending, error }: queryRes = useQuery(
         {
-            queryFn: ({ signal }) => fetchProducts(signal),
-            queryKey: ['fetch-products']
+            queryFn: ({ signal }) => fetchProducts(signal, { oAuthToken: authState.oAuthToken }),
+            queryKey: ['fetch-products-homepage'],
+            enabled: !authState.isLoading
         }
     )
 
@@ -32,6 +36,7 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
                 key={product.id}
                 title={product.title}
                 desc={product.description}
+                isInWishList={(!product.wishlist || product.wishlist?.length === 0) ? false : true}
             />
         </CarouselItem>)
     ))
@@ -41,7 +46,7 @@ export default function BookSection({ atTop }: { atTop?: Boolean }) {
             <div id="products">
                 {isError ? (
                     <Error StatusCode={error.statusCode} msg={error.message} />
-                ) : isPending ? (
+                ) : (isPending || authState.isLoading) ? (
                     <Spinner className={`size-10 ${atTop ? 'text-bStoreCol max-sm:text-white' : 'text-white'}`} />
                 ) : data?.products.length === 0 ? (
                     <p className={`text-4xl tracking-wide ${atTop ? 'text-bStoreCol' : 'text-white'}`}>Store is Empty</p>

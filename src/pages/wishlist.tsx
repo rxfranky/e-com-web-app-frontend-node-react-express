@@ -34,7 +34,7 @@ export default function Wishlist(): JSX.Element {
     const { data, error, isPending, isError }: queRes = useQuery(
         {
             queryFn: ({ signal, queryKey }) => { return getWishlist(queryKey[0], authState.oAuthToken) },
-            queryKey: [searchParams.get('page')!, 'wishlist', authState.isLoggedIn]
+            queryKey: [searchParams.get('page')!, 'get-wishlist', authState.isLoggedIn]
         }
     )
 

@@ -58,25 +58,11 @@ export default function Header() {
     })
 
     useEffect(() => {
-        if (showSearchContent) {
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            const isBodyOverflowing = document.body.scrollHeight > window.innerHeight ||
-                document.body.scrollWidth > window.innerWidth;
-
-            if (isBodyOverflowing) {
-                document.body.style.paddingRight = `${scrollbarWidth}px`;
-                document.body.classList.add("overflow-hidden")
-            }
-        } else {
-            document.body.style.paddingRight = "";
-            document.body.classList.remove("overflow-hidden")
-        }
         if (pathname.includes('/products/productDetail')) {
             setShowSearchedContent(false)
             setShowSearchInp(false)
         }
-
-    }, [showSearchContent, pathname])
+    }, [ pathname])
 
     let searchContent;
     if (searchedData?.getProducts && showSearchContent) {
