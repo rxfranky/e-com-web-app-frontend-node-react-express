@@ -98,7 +98,12 @@ export default function Auth(): JSX.Element {
     async function signIn(provider: string) {
         const res = await authClient.signIn.social({
             provider: provider === 'google' ? 'google' : provider === 'discord' ? 'discord' : "github",
-            callbackURL: import.meta.env.VITE_FRONTEND_URL
+            callbackURL: import.meta.env.VITE_FRONTEND_URL,
+            fetchOptions: {
+                onSuccess: () => {
+                    localStorage.removeItem('authToken')
+                }
+            }
         })
 
         if (res.error) {

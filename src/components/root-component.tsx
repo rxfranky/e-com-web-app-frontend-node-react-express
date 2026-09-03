@@ -11,6 +11,8 @@ import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
 import Error from "@/pages/error";
 import { logout } from '@/utils/http-requests'
+import bookStoreImg from '/book-store.png'
+import { motion, AnimatePresence } from 'motion/react'
 
 
 interface queryRes {
@@ -61,12 +63,34 @@ export default function RootComponent() {
 
     return (
         <>
-            <Header />
-            <main>
-                <Outlet />
-                <Toaster />
-            </main>
-            <Footer />
+            <AnimatePresence mode="wait">
+                {(isPending || oIsPending) ? (
+                    <motion.div
+                        key='loading-screen'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.7 }}
+                        className="min-h-screen w-screen flex justify-center items-center"
+                    >
+                        <img src={bookStoreImg} alt="book store image" />
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key='app'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.7 }}
+                    >
+                        <Header />
+                        <main>
+                            <Outlet />
+                            <Toaster />
+                        </main>
+                        <Footer />
+                    </motion.div>)}
+            </AnimatePresence>
         </>
     )
 }
