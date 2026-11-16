@@ -1,16 +1,15 @@
-import type { JSX } from "react"
 import FormComponent from "../components/form-component"
 import { useMutation } from "@tanstack/react-query"
-import { useState, useEffect } from "react"
-import { useNavigate, useLocation } from "react-router"
+import { useNavigate, useLocation, useSearchParams } from "react-router"
 import Error from "./error"
 import Modal from "../components/modal"
-import { useActionState } from "react"
+import { useActionState, type JSX, useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { newPassword } from "../utils/http-requests"
-import { useSearchParams } from "react-router"
 import { Spinner } from "@/components/ui/spinner"
 import { motion } from 'motion/react'
+import eyeIcon from '../assets/icons8-eye-48.png'
+import crossedEyeIcon from '../assets/icons8-invisible-48.png'
 
 
 interface resMutation {
@@ -27,6 +26,7 @@ export default function NewPassword(): JSX.Element {
     const navigate = useNavigate()
     const [formState, formAction, isFormSubmitting] = useActionState(handleFormSubmit, null)
     const [searchParams, setSearchParams] = useSearchParams()
+    const [showPass, setShowPass] = useState<boolean>(false)
 
     const resetToken = searchParams.get('token')
 
@@ -50,6 +50,9 @@ export default function NewPassword(): JSX.Element {
         }
     }, [pathname])
 
+    function handleShowPassword() {
+        setShowPass((val) => !val)
+    }
 
     if (isError) {
         return <Error StatusCode={error.statusCode} msg={error.message} />
@@ -65,8 +68,14 @@ export default function NewPassword(): JSX.Element {
 
             <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
-                    <FormComponent label="New Password" name="newPassword" />
-                    <FormComponent label="New Confirm Password" name="newConfirmPassword" />
+                    <div className="relative">
+                        <FormComponent type={showPass ? 'text' : 'password'} label="New Password" name="newPassword" />
+                        <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="eye-icon" sizes='18' className='absolute top-[35px] right-2 cursor-pointer' width={18} height={18} />
+                    </div>
+                    <div className="relative">
+                        <FormComponent type={showPass ? 'text' : 'password'} label="New Confirm Password" name="newConfirmPassword" />
+                        <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="eye-icon" sizes='18' className='absolute top-[35px] right-2 cursor-pointer' width={18} height={18} />
+                    </div>
                     <div className="flex justify-end">
                         <motion.button
                             className="py-1.5 flex justify-center text-nowrap items-center gap-2 rounded-sm px-2 cursor-pointer bg-white text-bStoreCol"

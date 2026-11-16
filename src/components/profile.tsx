@@ -44,11 +44,10 @@ export default function Profile({ onClose }: { onClose: (action: boolean) => voi
             await authClient.signOut()
             dispatch(logoutAction({ isLoggedIn: false }))
             dispatch(handleShowProfileAction(false))
-            queryClient.invalidateQueries({ queryKey: ['fetch-products', 'fetch-products-homepage'], refetchType: 'all' })
         } else {
             mutate(localStorage.getItem('authToken'))
-            queryClient.invalidateQueries({ queryKey: ['fetch-products', 'fetch-products-homepage'], refetchType: 'all' })
         }
+        queryClient.invalidateQueries({ queryKey: ['fetch-products', 'fetch-products-homepage'], refetchType: 'all' })
     }
 
     useEffect(() => {

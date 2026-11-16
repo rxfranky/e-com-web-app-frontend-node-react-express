@@ -22,7 +22,6 @@ interface queryRes {
     isPending: boolean
 }
 
-
 export default function RootComponent() {
     const { data, isError, error, isPending }: queryRes = useQuery({
         queryFn: getAuthState,
@@ -64,32 +63,29 @@ export default function RootComponent() {
     return (
         <>
             <AnimatePresence mode="wait">
-                {(isPending || oIsPending) ? (
-                    <motion.div
-                        key='loading-screen'
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="min-h-screen w-screen flex justify-center items-center"
-                    >
-                        <img src={bookStoreImg} alt="book store image" />
-                    </motion.div>
-                ) : (
-                    <motion.div
-                        key='app'
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.7 }}
-                    >
-                        <Header />
-                        <main>
-                            <Outlet />
-                            <Toaster />
-                        </main>
-                        <Footer />
-                    </motion.div>)}
+                {(isPending || oIsPending) ? (<motion.div
+                    key='loading-screen'
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7 }}
+                    className="min-h-screen w-screen flex justify-center items-center"
+                >
+                    <img src={bookStoreImg} alt="book store image" />
+                </motion.div>) : (<motion.div
+                    key='app'
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7 }}
+                >
+                    <Header />
+                    <main>
+                        <Outlet />
+                        <Toaster />
+                    </main>
+                    <Footer />
+                </motion.div>)}
             </AnimatePresence>
         </>
     )

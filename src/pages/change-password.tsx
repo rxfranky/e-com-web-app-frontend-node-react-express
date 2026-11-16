@@ -1,17 +1,17 @@
 import FormComponent from "../components/form-component";
-import { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { changePassword } from "../utils/http-requests";
 import Error from "./error";
 import { useNavigate, useLocation } from "react-router";
-import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Modal from "../components/modal";
 import { useSelector, useDispatch } from "react-redux"
-import { handleShowProfile as handleShowProfileAction } from '../store/show/show-slice'
-import { handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
+import { handleShowProfile as handleShowProfileAction, handleShowHamberger as handleShowHambergerAction } from '../store/show/show-slice'
 import { Spinner } from "@/components/ui/spinner"
 import { motion } from 'motion/react'
+import eyeIcon from '../assets/icons8-eye-48.png'
+import crossedEyeIcon from '../assets/icons8-invisible-48.png'
 
 
 type mutationRes = {
@@ -30,13 +30,14 @@ export default function ChangePassword() {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const dispatch = useDispatch()
     const show = useSelector((state: any) => state.showStateChanger)
+    const [showPass, setShowPass] = useState<boolean>(false)
 
     useEffect(() => {
         if (show.showHamberger) {
             dispatch(handleShowHambergerAction(false))
         }
         dispatch(handleShowProfileAction(false))
-    }, [])
+    }, [show])
 
     const { mutate, data, isError, error, isPending }: mutationRes = useMutation({
         mutationFn: changePassword,
@@ -62,6 +63,10 @@ export default function ChangePassword() {
         mutate(dataObj)
     }
 
+    function handleShowPassword() {
+        setShowPass((val) => !val)
+    }
+
     if (!isLoggedIn) {
         return (
             <>
@@ -78,9 +83,18 @@ export default function ChangePassword() {
         <>
             <div className="m-auto mt-5 mb-5 parent w-[60vw] max-sm:w-[73vw] bg-bStoreCol rounded-md flex justify-center">
                 <form className="flex flex-col gap-3 pt-9 pb-9" action={formAction}>
-                    <FormComponent label="Old Password" name="oldPassword" />
-                    <FormComponent label="New Password" name="newPassword" />
-                    <FormComponent label="New Confirm Password" name="newConfirmPassword" />
+                    <div className="relative">
+                        <FormComponent type={showPass ? 'text' : 'password'} label="Old Password" name="oldPassword" />
+                        <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="eye-icon" sizes='18' className='absolute top-[35px] right-2 cursor-pointer' width={18} height={18} />
+                    </div>
+                    <div className="relative">
+                        <FormComponent type={showPass ? 'text' : 'password'} label="New Password" name="newPassword" />
+                        <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="eye-icon" sizes='18' className='absolute top-[35px] right-2 cursor-pointer' width={18} height={18} />
+                    </div>
+                    <div className="relative">
+                        <FormComponent type={showPass ? 'text' : 'password'} label="New Confirm Password" name="newConfirmPassword" />
+                        <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="eye-icon" sizes='18' className='absolute top-[35px] right-2 cursor-pointer' width={18} height={18} />
+                    </div>
                     <div className="flex justify-end">
                         <motion.button
                             className="py-1.5 px-2 flex justify-center items-center gap-2 rounded-sm cursor-pointer bg-white text-bStoreCol text-nowrap"

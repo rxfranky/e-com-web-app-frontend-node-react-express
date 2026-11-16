@@ -4,18 +4,15 @@ import githubLogo from '../assets/icons8-github-logo.svg'
 import nameIcon from '../assets/icons8-name-48.png'
 import emailIcon from '../assets/icons8-email-48.png'
 import passwordIcon from '../assets/icons8-password-48.png'
-import { useState, useEffect } from "react";
+import eyeIcon from '../assets/icons8-eye-48.png'
+import crossedEyeIcon from '../assets/icons8-invisible-48.png'
+import { useState, useEffect, type JSX, useActionState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useMutation } from "@tanstack/react-query"
-import { signup } from "../utils/http-requests"
-import type { JSX } from "react"
-import { type UseMutationResult } from '@tanstack/react-query'
-import { NavLink } from "react-router"
-import { login } from "../utils/http-requests"
-import { useNavigate, useLocation } from "react-router"
+import { useMutation, type UseMutationResult } from "@tanstack/react-query"
+import { signup, login } from "../utils/http-requests"
+import { useNavigate, useLocation, NavLink } from "react-router"
 import Error from "./error"
 import Modal from "../components/modal"
-import { useActionState } from "react"
 import { createPortal } from "react-dom"
 import { login as loginAction } from "../store/auth/auth-slice"
 import { useSelector, useDispatch } from 'react-redux'
@@ -32,6 +29,8 @@ export default function Auth(): JSX.Element {
     const show = useSelector((state: any) => state.showStateChanger)
     const oAuthToken = useSelector((state: any) => state.authStateChanger.authState.oAuthToken)
     const dispatch = useDispatch()
+    const { data: oAuthData } = authClient.useSession()
+    const [showPass, setShowPass] = useState<boolean>(false)
 
     const { mutate: lMutate,
         isError: lIsError,
@@ -80,11 +79,15 @@ export default function Auth(): JSX.Element {
         if (show.showHamberger) {
             dispatch(handleShowHambergerAction(false))
         }
-    }, [pathname, lData])
+    }, [pathname, lData, show])
 
     function handleFormSubmit(prevState: any, formData: any) {
         const formDataObj = Object.fromEntries(formData)
         isSignupMode ? mutate(formDataObj) : lMutate({ ...formDataObj, oAuthToken })
+    }
+
+    function handleShowPassword() {
+        setShowPass((val) => !val)
     }
 
     if (isError || lIsError) {
@@ -102,6 +105,10 @@ export default function Auth(): JSX.Element {
             fetchOptions: {
                 onSuccess: () => {
                     localStorage.removeItem('authToken')
+                },
+                headers: {
+                    authToken: 'Bearer ' + localStorage.getItem('authToken'),
+                    oAuthToken: 'Bearer ' + oAuthData?.session.token
                 }
             }
         })
@@ -186,18 +193,19 @@ export default function Auth(): JSX.Element {
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}
                                             >
-                                                <img src={nameIcon} alt="" height={18} width={18} className="absolute top-4 left-2" />
+                                                <img src={nameIcon} alt="name-icon" height={18} width={18} className="absolute top-4 left-2" />
                                                 <input type="text" name="name" placeholder="Name" autoComplete='name' className="py-3 px-8 w-[378.5px] max-sm:w-[260px] bg-black/10" />
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
                                     <div className="relative">
-                                        <img src={emailIcon} alt="" height={18} width={18} className="absolute top-4 left-2" />
+                                        <img src={emailIcon} alt="email-icon" height={18} width={18} className="absolute top-4 left-2" />
                                         <input type="text" name="email" placeholder="Email" autoComplete='email' className="py-3 px-8 w-[378.5px] max-sm:w-[260px] bg-black/10" />
                                     </div>
                                     <div className="relative">
-                                        <img src={passwordIcon} alt="" height={18} width={18} className="absolute top-4 left-2" />
-                                        <input type="text" name="password" placeholder="Password" autoComplete={`${isSignupMode ? 'new-password' : 'current-password'}`} className="py-3 px-8 w-[378.5px] max-sm:w-[260px] bg-black/10" />
+                                        <img src={passwordIcon} alt="password-icon" height={18} width={18} className="absolute top-4 left-2" />
+                                        <input type={showPass ? 'text' : 'password'} name="password" placeholder="Password" autoComplete={`${isSignupMode ? 'new-password' : 'current-password'}`} className="py-3 px-8 w-[378.5px] max-sm:w-[260px] bg-black/10" />
+                                        <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="eye-icon" sizes='18' className='absolute top-4 right-2 cursor-pointer' width={18} height={18} />
                                     </div>
                                     <AnimatePresence>
                                         {isSignupMode && (
@@ -207,8 +215,9 @@ export default function Auth(): JSX.Element {
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}
                                             >
-                                                <img src={passwordIcon} alt="" height={18} width={18} className="absolute top-4 left-2" />
-                                                <input type="text" name="confirmPassword" placeholder="Confirm password" autoComplete='new-password' className="py-3 px-8 w-[378.5px] max-sm:w-[260px] bg-black/10" />
+                                                <img src={passwordIcon} alt="password-icon" height={18} width={18} className="absolute top-4 left-2" />
+                                                <input type={showPass ? 'text' : 'password'} name="confirmPassword" placeholder="Confirm password" autoComplete='new-password' className="py-3 px-8 w-[378.5px] max-sm:w-[260px] bg-black/10" />
+                                                <img onClick={handleShowPassword} src={showPass ? crossedEyeIcon : eyeIcon} alt="crossed-eye-icon" className='absolute top-4 right-2 cursor-pointer' width={18} height={18} />
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
