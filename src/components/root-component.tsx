@@ -71,7 +71,7 @@ export default function RootComponent() {
                     transition={{ duration: 0.7 }}
                     className="min-h-screen w-screen flex justify-center items-center"
                 >
-                    <img src={bookStoreImg} alt="book store image" />
+                    <img src={bookStoreImg} alt="book store image" width={32} height={32}/>
                 </motion.div>) : (<motion.div
                     key='app'
                     initial={{ opacity: 0 }}

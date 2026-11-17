@@ -79,7 +79,7 @@ export default function Auth(): JSX.Element {
         if (show.showHamberger) {
             dispatch(handleShowHambergerAction(false))
         }
-    }, [pathname, lData, show])
+    }, [pathname, lData])
 
     function handleFormSubmit(prevState: any, formData: any) {
         const formDataObj = Object.fromEntries(formData)

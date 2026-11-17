@@ -45,7 +45,7 @@ export default function NewPassword(): JSX.Element {
         }
     )
     useEffect(() => {
-        if (pathname === '/login') {
+        if (pathname === '/auth') {
             setShowDialog(false)
         }
     }, [pathname])

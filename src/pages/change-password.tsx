@@ -37,7 +37,10 @@ export default function ChangePassword() {
             dispatch(handleShowHambergerAction(false))
         }
         dispatch(handleShowProfileAction(false))
-    }, [show])
+        if (location.pathname === '/auth') {
+            setShowDialog(false)
+        }
+    }, [location.pathname])
 
     const { mutate, data, isError, error, isPending }: mutationRes = useMutation({
         mutationFn: changePassword,
@@ -51,12 +54,6 @@ export default function ChangePassword() {
             }
         }
     })
-
-    useEffect(() => {
-        if (location.pathname === '/login') {
-            setShowDialog(false)
-        }
-    }, [location.pathname])
 
     function handleFormSubmit(prevState: any, formData: FormData) {
         const dataObj = Object.fromEntries(formData)
